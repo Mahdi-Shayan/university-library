@@ -221,7 +221,7 @@
 
   /* Book Card */
   .book-title {
-    @apply mt-2 line-clamp-1 text-base font-semibold text-white xs:text-xl;
+    @apply mt-2 line-clamp-2 text-base font-semibold text-white xs:text-xl;
   }
 
   .book-genre {
@@ -259,7 +259,7 @@
   }
 
   .book-cover_regular {
-    @apply xs:w-[174px] w-[114px] xs:h-[239px] h-[169px];
+    @apply sm:w-[174px] w-[114px] sm:h-[239px] h-[169px];
   }
 
   .book-cover_wide {
@@ -268,7 +268,7 @@
 
   /* Book List */
   .book-list {
-    @apply mt-10 flex flex-wrap gap-5 max-xs:justify-between xs:gap-10;
+    @apply mt-10 grid xl:grid-cols-6 max-xl:grid-cols-5 max-lg:grid-cols-4 max-[880px]:!grid-cols-3 max-xs:!grid-cols-2 gap-5 max-xs:justify-between xs:gap-10;
   }
 
   /* Book Overview */
@@ -281,7 +281,7 @@
   }
 
   .book-info {
-    @apply mt-7 flex flex-row flex-wrap gap-4 text-xl text-light-100;
+    @apply mt-7 flex flex-row flex-wrap gap-4 text-xl text-light-100 max-lg:text-lg max-sm:text-base;
   }
 
   .book-copies {
@@ -289,7 +289,7 @@
   }
 
   .book-copies p {
-    @apply text-xl text-light-100;
+    @apply text-xl text-light-100 max-lg:text-lg;
   }
 
   .book-copies p span {
@@ -297,7 +297,7 @@
   }
 
   .book-description {
-    @apply mt-2 text-justify text-xl text-light-100;
+    @apply mt-2 text-justify text-xl text-light-100 max-lg:text-lg max-sm:text-base;
   }
 
   .book-overview_btn {
