@@ -4,6 +4,7 @@ import {
   DefaultValues,
   FieldValues,
   Path,
+  SubmitHandler,
   useForm,
   UseFormReturn,
 } from "react-hook-form";
@@ -22,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import ImageUploader from "./ImageUploader";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props<T extends FieldValues> {
   type: "SIGN_IN" | "SIGN_UP";
@@ -37,11 +40,41 @@ function AuthForm<T extends FieldValues>({
   onSubmit,
 }: Props<T>) {
   const isSignIn = type === "SIGN_IN";
+  const router = useRouter();
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
   });
+
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    const result = await onSubmit(data);
+
+    if (result.success) {
+      toast.custom(() => (
+        <div className="bg-dark-300 text-white p-5 text-[14px] rounded-md w-90">
+          <h2>Welcome to BookWise</h2>
+          <p className="text-light-100 text-[13px] mt-1">
+            {isSignIn
+              ? "You have successfully signed in."
+              : "You have successfully signed up."}
+          </p>
+        </div>
+      ));
+
+      router.push("/");
+    } else {
+      toast.custom(() => (
+        <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
+          <h2>Error {isSignIn ? "signing in" : "signing up"}</h2>
+          <p className="text-light-100 text-[13px] mt-1">
+            {result.error ?? "An error occurred."}
+          </p>
+        </div>
+      ));
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold">
@@ -55,7 +88,10 @@ function AuthForm<T extends FieldValues>({
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="space-y-8"
+        >
           {Object.keys(defaultValues).map((field) => (
             <FormField
               key={field}
@@ -68,7 +104,7 @@ function AuthForm<T extends FieldValues>({
                   </FormLabel>
                   <FormControl>
                     {field.name === "universityCard" ? (
-                      <ImageUploader onChangeField={field.onChange}/>
+                      <ImageUploader onChangeField={field.onChange} />
                     ) : (
                       <Input
                         required

@@ -1,6 +1,7 @@
 'use client'
 
 import AuthForm from "@/components/AuthForm";
+import { signUp } from "@/lib/actions/auth";
 import { signUpSchema } from "@/lib/validations";
 
 function SignIn() {
@@ -15,7 +16,7 @@ function SignIn() {
         password: '',
         universityCard: '',
       }}
-      onSubmit={() => {}}
+      onSubmit={signUp}
     />
   );
 }
