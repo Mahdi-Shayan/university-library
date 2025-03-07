@@ -6,11 +6,19 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
 import { signIn } from "../../../auth";
+import { headers } from "next/headers";
+import ratelimit from "../rateLimit";
+import { redirect } from "next/navigation";
 
 export async function signInWithCredentials(
   params: Pick<AuthCredentials, "email" | "password">
 ) {
   const { email, password } = params;
+
+  const ip = (await headers()).get("x-forwarded-for") || "217.218.48.228";
+  const { success } = await ratelimit.limit(ip);
+
+  if(!success) return redirect("/too-fast")
 
   try {
     const result = await signIn("credentials", {
@@ -34,7 +42,10 @@ export async function signUp(params: AuthCredentials) {
   const { fullName, email, universityCard, universityId, password } =
     params;
 
-  // check if the user already exists
+  const ip = (await headers()).get("x-forwarded-for") || "217.218.48.228";
+  const { success } = await ratelimit.limit(ip);
+
+  if(!success) return redirect("/too-fast")
 
   const existingUser = await db
     .select()

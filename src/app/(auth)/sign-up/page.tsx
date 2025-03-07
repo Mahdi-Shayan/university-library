@@ -4,7 +4,7 @@ import AuthForm from "@/components/AuthForm";
 import { signUp } from "@/lib/actions/auth";
 import { signUpSchema } from "@/lib/validations";
 
-function SignIn() {
+function SignUp() {
   return (
     <AuthForm
       type="SIGN_UP"
@@ -21,4 +21,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;
