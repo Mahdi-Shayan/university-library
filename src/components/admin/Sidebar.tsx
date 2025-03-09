@@ -8,7 +8,7 @@ import { Session } from "next-auth";
 function Sidebar({ session }: { session: Session }) {
   return (
     <>
-      <div className="admin-sidebar max-sm:px-1">
+      <div className="admin-sidebar max-sm:px-2">
         <div>
           <div className="logo">
             <Image

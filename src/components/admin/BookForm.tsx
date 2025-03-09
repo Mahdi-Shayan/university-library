@@ -18,6 +18,7 @@ import { SampleBooks } from "../../../types";
 import { bookSchema } from "@/lib/validations";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../FileUploader";
+import ColorPicker from "./ColorPicker";
 
 interface Props extends Partial<SampleBooks> {
   type?: "create" | "update";
@@ -42,7 +43,9 @@ function BookForm<T extends FieldValues>({ type, ...book }: Props) {
     },
   });
 
-  const onSubmit = (vlaue: z.infer<typeof bookSchema>) => {};
+  const onSubmit = (value: z.infer<typeof bookSchema>) => {
+    console.log(value);
+  };
 
   return (
     <>
@@ -183,7 +186,12 @@ function BookForm<T extends FieldValues>({ type, ...book }: Props) {
                 <FormLabel className="text-base font-normal text-dark-500">
                   Book Primary Color
                 </FormLabel>
-                <FormControl>{/* color picker */}</FormControl>
+                <FormControl>
+                  <ColorPicker
+                    value={field.value}
+                    onPickerChange={field.onChange}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

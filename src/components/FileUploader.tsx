@@ -188,7 +188,7 @@ function FileUploader({
       {file && file.filePath &&(
         <div className="relative h-[300px] overflow-hidden">
           {type === "image" ? (
-            <IKImage alt={file.filePath} path={file.filePath} fill />
+            <IKImage alt={file.filePath} path={file.filePath} fill className="object-contain" />
           ) : type === "video" ? (
             <IKVideo
               path={file.filePath}
