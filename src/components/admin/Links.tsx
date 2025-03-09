@@ -7,10 +7,13 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 function Links({ link }: { link: AdminSideBarLinks }) {
-  const pathName = usePathname();
+  const pathname = usePathname();
 
   const isSelected: boolean =
-    pathName === "/admin" && pathName.includes(link.route);
+    (link.route !== "/admin" &&
+      pathname.includes(link.route) &&
+      link.route.length > 1) ||
+    pathname === link.route;
 
   return (
     <>
