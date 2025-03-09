@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
-import ImageUploader from "./ImageUploader";
+import FileUploader from "./FileUploader";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -77,12 +77,12 @@ function AuthForm<T extends FieldValues>({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-semibold ">
         {isSignIn
           ? "Welcome Back to the BookWise"
           : "Create Your Library Account"}
       </h1>
-      <p className="font-light text-base">
+      <p className="font-light text-light-500">
         {isSignIn
           ? "Access the vast collection of resources, and stay updated"
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
@@ -104,7 +104,14 @@ function AuthForm<T extends FieldValues>({
                   </FormLabel>
                   <FormControl>
                     {field.name === "universityCard" ? (
-                      <ImageUploader onChangeField={field.onChange} />
+                      <FileUploader
+                        type="image"
+                        variant="dark"
+                        folder="ids"
+                        accept="image/*"
+                        placeholder="Upload a file"
+                        onChangeField={field.onChange}
+                      />
                     ) : (
                       <Input
                         required

@@ -622,7 +622,7 @@
 
   /* Auth */
   .auth-container {
-    @apply relative flex flex-col-reverse text-light-100 sm:flex-row;
+    @apply relative flex flex-col-reverse text-light-100 md:flex-row;
   }
 
   .auth-form {
@@ -634,7 +634,7 @@
   }
 
   .auth-illustration {
-    @apply sticky h-40 w-full sm:top-0 sm:h-screen sm:flex-1;
+    @apply sticky h-40 w-full sm:top-0 md:h-screen md:flex-1;
   }
 
   /* Root */

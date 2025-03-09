@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { SampleBooks } from "../../../types";
 import { bookSchema } from "@/lib/validations";
 import { Textarea } from "../ui/textarea";
+import FileUploader from "../FileUploader";
 
 interface Props extends Partial<SampleBooks> {
   type?: "create" | "update";
@@ -159,7 +160,17 @@ function BookForm<T extends FieldValues>({ type, ...book }: Props) {
                 <FormLabel className="text-base font-normal text-dark-500">
                   Book Image
                 </FormLabel>
-                <FormControl>{/* image uploader */}</FormControl>
+                <FormControl>
+                  <FileUploader
+                    type="image"
+                    accept="image/*"
+                    variant="light"
+                    placeholder="Upload a book cover"
+                    onChangeField={field.onChange}
+                    folder="books/cover"
+                    value={field.value}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -206,7 +217,17 @@ function BookForm<T extends FieldValues>({ type, ...book }: Props) {
                 <FormLabel className="text-base font-normal text-dark-500">
                   Book Video
                 </FormLabel>
-                <FormControl>{/* video uploader */}</FormControl>
+                <FormControl>
+                  <FileUploader
+                    type="video"
+                    accept="video/*"
+                    folder="books/video"
+                    variant="light"
+                    placeholder="Upload book trailer"
+                    onChangeField={field.onChange}
+                    value={field.value}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
