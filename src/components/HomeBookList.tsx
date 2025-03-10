@@ -9,6 +9,8 @@ interface Props {
 }
 
 function HomeBookList({ title, books, className}: Props) {
+  if(books.length < 2) return;
+
   return (<>
     <section className={className}>
       <h2 className="text-3xl font-semibold">{title}</h2>

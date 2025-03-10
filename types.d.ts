@@ -10,7 +10,7 @@ export interface AdminSideBarLinks {
 }
 
 export interface SampleBooks {
-  id: number;
+  id: string;
   title: string;
   author: string;
   genre: string;
@@ -22,6 +22,7 @@ export interface SampleBooks {
   coverUrl: string;
   videoUrl: string;
   summary: string;
+  createAt?: Date | null;
 }
 
 export interface Sorts {
@@ -48,5 +49,5 @@ export interface AuthCredentials {
   email: string;
   password: string;
   universityId: number;
-  universityCard: string
-} 
+  universityCard: string;
+}

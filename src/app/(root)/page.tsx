@@ -1,13 +1,21 @@
 import BookReview from "@/components/BookReview";
 import HomeBookList from "@/components/HomeBookList";
-import { sampleBooks } from "@/constants";
+import { db } from "@/db/drizzle";
+import { books } from "@/db/schema";
+import { SampleBooks } from "../../../types";
 
+async function Home() {
+  const latestBooks = (await db
+    .select()
+    .from(books)
+    .limit(10)) as SampleBooks[];
 
-export default function Home() {
   return (
     <div className="flex flex-col gap-20">
-      <BookReview {...sampleBooks[0]}/>
-      <HomeBookList title="Popular Books" books={sampleBooks}/>
+      <BookReview {...latestBooks[0]} />
+      <HomeBookList title="Popular Books" books={latestBooks.slice(1)} />
     </div>
   );
 }
+
+export default Home;

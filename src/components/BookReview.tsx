@@ -7,7 +7,7 @@ interface Props extends SampleBooks {
   // userId: string;
 }
 
-function BookReview({
+function  BookReview({
   title,
   author,
   genre,
