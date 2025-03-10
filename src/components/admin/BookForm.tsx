@@ -19,12 +19,14 @@ import { bookSchema } from "@/lib/validations";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../FileUploader";
 import ColorPicker from "./ColorPicker";
+import { createBook } from "@/lib/actions/admin/actions/createBook";
+import { toast } from "sonner";
 
 interface Props extends Partial<SampleBooks> {
   type?: "create" | "update";
 }
 
-function BookForm<T extends FieldValues>({ type, ...book }: Props) {
+function BookForm({ type, ...book }: Props) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof bookSchema>>({
@@ -43,8 +45,32 @@ function BookForm<T extends FieldValues>({ type, ...book }: Props) {
     },
   });
 
-  const onSubmit = (value: z.infer<typeof bookSchema>) => {
-    console.log(value);
+  const onSubmit = async (values: z.infer<typeof bookSchema>) => {
+    const result = await createBook(values);
+
+    console.log(values);
+
+    if (result.success) {
+      toast.custom(() => (
+        <div className="bg-dark-300 text-white p-5 text-[14px] rounded-md w-90">
+          <h2>Success</h2>
+          <p className="text-light-100 text-[13px] mt-1">
+            Book created successfully
+          </p>
+        </div>
+      ));
+
+      router.push(`/admin/books/${result.data.id}`);
+    } else {
+      toast.custom(() => (
+        <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
+          <h2>Error</h2>
+          <p className="text-light-100 text-[13px] mt-1">
+            {result.message}
+          </p>
+        </div>
+      ));
+    }
   };
 
   return (
@@ -180,7 +206,7 @@ function BookForm<T extends FieldValues>({ type, ...book }: Props) {
           />
           <FormField
             control={form.control}
-            name={"coverUrl"}
+            name={"coverColor"}
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-normal text-dark-500">

@@ -8,6 +8,13 @@
       "when": 1741252232001,
       "tag": "0000_soft_black_bolt",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1741611440546,
+      "tag": "0001_busy_ghost_rider",
+      "breakpoints": true
     }
   ]
 }
