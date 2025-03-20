@@ -15,6 +15,13 @@
       "when": 1741611440546,
       "tag": "0001_busy_ghost_rider",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742467006710,
+      "tag": "0002_long_moondragon",
+      "breakpoints": true
     }
   ]
 }

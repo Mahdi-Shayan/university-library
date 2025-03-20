@@ -2,13 +2,17 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "../../../../auth";
 import { LogOut } from "lucide-react";
 import HomeBookList from "@/components/HomeBookList";
-import { sampleBooks } from "@/constants";
+import { db } from "@/db/drizzle";
+import { books } from "@/db/schema";
+import { SampleBooks } from "../../../../types";
 
-function MyProfile() {
+async function MyProfile() {
+  const booksList = (await db.select().from(books)) as SampleBooks[];
+
   return (
     <>
       <form
-      className="mb-20"
+        className="mb-20"
         action={async () => {
           "use server";
 
@@ -21,7 +25,7 @@ function MyProfile() {
         </Button>
       </form>
 
-      <HomeBookList title="Borrowed Books" books={sampleBooks} />
+      <HomeBookList title="Borrowed Books" books={booksList} />
     </>
   );
 }
