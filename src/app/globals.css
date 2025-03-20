@@ -297,7 +297,7 @@
   }
 
   .book-description {
-    @apply mt-2 text-justify text-xl text-light-100 max-lg:text-lg max-sm:text-base;
+    @apply mt-2 text-justify text-lg text-light-100 max-sm:text-base;
   }
 
   .book-overview_btn {
@@ -644,11 +644,11 @@
 
   /* Book Details */
   .book-details {
-    @apply lg:mt-36 mt-16 mb-20 flex flex-col gap-16 lg:flex-row;
+    @apply lg:mt-36 mt-16 mb-20 flex flex-col gap-18 lg:flex-row;
   }
 
   .book-details h3 {
-    @apply text-xl font-semibold text-primary;
+    @apply text-3xl font-semibold;
   }
 
   /* Library */
