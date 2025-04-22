@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { db } from "@/db/drizzle";
 import { books } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -7,12 +9,21 @@ import { redirect } from "next/navigation";
 import BookVideo from "@/components/BookVideo";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
+import { auth } from "../../../../../auth";
 
-async function BookDetails({ params }: { params: any }) {
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+async function BookDetailsPage({ params }: Props) {
+  const session = await auth();
+
+  const { id } = await params;
+
   const [book] = (await db
     .select()
     .from(books)
-    .where(eq(params.id, books.id))
+    .where(eq(books.id, id))
     .limit(1)) as SampleBooks[];
 
   if (!book) redirect("/404");
@@ -27,7 +38,7 @@ async function BookDetails({ params }: { params: any }) {
   return (
     <>
       <div>
-        <BookReview {...book} />
+        <BookReview {...book} userId={session?.user?.id as string} />
         <div className="book-details">
           {/* BOOK SUMMARY */}
           <div className="flex-[1.2]">
@@ -51,7 +62,7 @@ async function BookDetails({ params }: { params: any }) {
             {similarBooks.length > 1 ? (
               <div className="grid xl:grid-cols-3 lg:grid-cols-2 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2  gap-3 gap-y-5">
                 {similarBooks.map((book) => (
-                  <Link href={`/books/${book.id}`}>
+                  <Link key={book.id} href={`/books/${book.id}`}>
                     <BookCover
                       variant="medium"
                       coverColor={book.coverColor}
@@ -72,4 +83,4 @@ async function BookDetails({ params }: { params: any }) {
   );
 }
 
-export default BookDetails;
+export default BookDetailsPage;

@@ -1,13 +1,15 @@
-import Image from "next/image";
-import { Button } from "./ui/button";
 import BookCover from "./BookCover";
 import { SampleBooks } from "../../types";
+import { db } from "@/db/drizzle";
+import { books, borrowRecords, users } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
+import BookDetails from "./BookDetails";
 
 interface Props extends SampleBooks {
-  // userId: string;
+  userId: string;
 }
 
-function  BookReview({
+async function BookReview({
   title,
   author,
   genre,
@@ -17,53 +19,67 @@ function  BookReview({
   description,
   coverColor,
   coverUrl,
+  userId,
   id,
-  // userId,
 }: Props) {
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  if (!user) return null;
+
+  const borrow = await db
+    .select({
+      id: books.id,
+      title: books.title,
+      author: books.author,
+    })
+    .from(borrowRecords)
+    .where(eq(borrowRecords.userId, userId))
+    .innerJoin(books, eq(borrowRecords.bookId, books.id));
+
+  const existingRecord = await db
+    .select()
+    .from(borrowRecords)
+    .where(
+      and(eq(borrowRecords.userId, userId), eq(borrowRecords.bookId, id))
+    )
+    .limit(1);
+
+  const borrowingEligibility = {
+    isEligible:
+      availableCopies > 0 &&
+      user.status === "APPROVED" &&
+      borrow.length < 5 &&
+      existingRecord.length === 0,
+    message:
+      availableCopies <= 0
+        ? "Book is not available"
+        : borrow.length > 5
+        ? "You borrow limit reached!!!"
+        : existingRecord.length !== 0
+        ? "You borrowed this book before."
+        : "You are not eligible to borrow this book",
+  };
+
   return (
     <section className="book-overview">
-      <div className="flex flex-col flex-1 gap-5">
-        <h1 className="text-6xl font-bold max-lg:text-5xl max-sm:text-4xl">
-          {title}
-        </h1>
-        <div className="book-info font-light">
-          <p>
-            By <span className="text-primary font-semibold">{author}</span>
-          </p>
-          <p>
-            Category:{" "}
-            <span className="text-primary font-semibold">{genre}</span>
-          </p>
-          <div className="flex gap-2">
-            <Image
-              src="/icons/star.svg"
-              alt="rate"
-              height={22}
-              width={22}
-            />
-            <p className="font-semibold">
-              <span className="text-primary">{rating}</span>
-              /5
-            </p>
-          </div>
-        </div>
-        <div className="book-copies">
-          <p>
-            Total books:
-            <span>{totalCopies}</span>
-          </p>
-          <p>
-            Available books:
-            <span>{availableCopies}</span>
-          </p>
-        </div>
-        <p className="book-description">{description}</p>
-        <Button className="book-overview_btn">
-          <Image src="/icons/book.svg" alt="book" height={20} width={20} />
-          <p className="!font-bebas-neue text-xl">BORROW BOOK REQUEST</p>
-        </Button>
-      </div>
-
+      <BookDetails
+        details={{
+          id,
+          title,
+          author,
+          genre,
+          rating,
+          totalCopies,
+          availableCopies,
+          description,
+        }}
+        userId={userId}
+        borrowingEligibility={borrowingEligibility}
+      />
       {/* RIGHT SIDE --- BOOK COVER */}
       <div className="relative flex-1 flex justify-center">
         <div className="relative">

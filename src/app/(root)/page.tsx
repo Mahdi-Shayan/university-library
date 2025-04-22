@@ -3,6 +3,7 @@ import HomeBookList from "@/components/HomeBookList";
 import { db } from "@/db/drizzle";
 import { books } from "@/db/schema";
 import { SampleBooks } from "../../../types";
+import { auth } from "../../../auth";
 
 async function Home() {
   const latestBooks = (await db
@@ -10,9 +11,14 @@ async function Home() {
     .from(books)
     .limit(10)) as SampleBooks[];
 
+  const session = await auth();
+
   return (
     <div className="flex flex-col gap-20">
-      <BookReview {...latestBooks[0]} />
+      <BookReview
+        {...latestBooks[0]}
+        userId={session?.user?.id as string}
+      />
       <HomeBookList title="Popular Books" books={latestBooks.slice(1)} />
     </div>
   );

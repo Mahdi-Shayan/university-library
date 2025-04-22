@@ -51,3 +51,8 @@ export interface AuthCredentials {
   universityId: number;
   universityCard: string;
 }
+
+export interface BorrowBookParams {
+  userId: string;
+  bookId: string;
+}
