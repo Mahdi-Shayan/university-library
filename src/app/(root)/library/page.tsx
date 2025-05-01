@@ -38,7 +38,7 @@ async function Library({ searchParams }: Props) {
         <SearchBox query={query} />
       </div>
       <div className="my-25">
-        <h2 className="text-3xl max-md:text-[26px] font-semibold ">
+        <h2 className="text-3xl max-md:text-[26px] font-semibold text-light-100">
           Search Result {query && searchBooks && "for"}{" "}
           {query && searchBooks.length > 0 && (
             <span className="text-light-200">{query}</span>

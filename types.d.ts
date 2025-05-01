@@ -25,6 +25,16 @@ export interface SampleBooks {
   createAt?: Date | null;
 }
 
+export interface BorrowedBook {
+  id: string;
+  userId: string;
+  bookId: string;
+  borrowDate: Date;
+  dueDate: string;
+  returnDate: string | null;
+  status: "BORROWED" | "RETURNED";
+  createAt: Date | null;
+}
 export interface Sorts {
   value: string;
   label: string;

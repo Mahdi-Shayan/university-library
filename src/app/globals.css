@@ -244,11 +244,11 @@
 
   /* Borrowed Book */
   .borrowed-book {
-    @apply bg-gradient-vertical p-5 rounded-2xl xs:w-min w-full relative;
+    @apply bg-gradient-vertical p-5 rounded-2xl w-full max-w-[330px] relative;
   }
 
   .borrowed-book_cover {
-    @apply py-4 lg:px-16 px-10 flex justify-center items-center w-full rounded-lg;
+    @apply py-4 lg:px-16 px-10 rounded-lg flex justify-center;
   }
 
   /* Book Cover */

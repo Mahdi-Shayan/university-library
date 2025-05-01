@@ -13,7 +13,7 @@ function HomeBookList({ title, books, className }: Props) {
   return (
     <>
       <section className={className}>
-        <h2 className="text-3xl max-md:text-[26px] font-semibold">
+        <h2 className="text-3xl max-md:text-[26px] font-semibold text-light-100">
           {title}
         </h2>
         <ul className="book-list">
