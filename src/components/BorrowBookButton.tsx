@@ -69,12 +69,7 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
     const { isEligible, message } = borrowingEligibility;
 
     if (!isEligible) {
-      toast.custom(() => (
-        <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Error</h2>
-          <p className="text-light-100 text-[13px] mt-1">{message}</p>
-        </div>
-      ));
+      toast.error(message);
       return;
     }
 
@@ -85,37 +80,18 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
       const result = await borrowBookAction({ userId, bookId });
 
       if (!result.success) {
-        toast.custom(() => (
-          <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-            <h2>Error</h2>
-            <p className="text-light-100 text-[13px] mt-1">
-              {(result.message as string) ||
-                "Somthing went wrong. Please try again later!!!"}
-            </p>
-          </div>
-        ));
+        toast.error(
+          (result.message as string) ||
+            "Somthing went wrong. Please try again later!!!"
+        );
         return;
       }
 
-      toast.custom(() => (
-        <div className="bg-dark-300 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Success</h2>
-          <p className="text-light-100 text-[13px] mt-1">
-            Book borrow successfully
-          </p>
-        </div>
-      ));
+      toast.success("Book borrow successfully");
       borrowedReftch();
       bookReftch();
     } catch {
-      toast.custom(() => (
-        <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Error</h2>
-          <p className="text-light-100 text-[13px] mt-1">
-            An error occurred while borrowing the book
-          </p>
-        </div>
-      ));
+      toast.error("An error occurred while borrowing the book");
     } finally {
       setTimeout(() => setBorrowing(false), 1000);
       setUpdated(true);

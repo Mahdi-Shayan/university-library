@@ -51,25 +51,11 @@ function BookForm({ type, ...book }: Props) {
     console.log(values);
 
     if (result.success) {
-      toast.custom(() => (
-        <div className="bg-dark-300 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Success</h2>
-          <p className="text-light-100 text-[13px] mt-1">
-            Book created successfully
-          </p>
-        </div>
-      ));
+      toast.success("Book created successfully");
 
       router.push(`/admin/books/${result.data.id}`);
     } else {
-      toast.custom(() => (
-        <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Error</h2>
-          <p className="text-light-100 text-[13px] mt-1">
-            {result.message}
-          </p>
-        </div>
-      ));
+      toast.error(`${result.message}`);
     }
   };
 

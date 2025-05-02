@@ -25,6 +25,8 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import FileUploader from "./FileUploader";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Image from "next/image";
 
 interface Props<T extends FieldValues> {
   type: "SIGN_IN" | "SIGN_UP";
@@ -41,6 +43,7 @@ function AuthForm<T extends FieldValues>({
 }: Props<T>) {
   const isSignIn = type === "SIGN_IN";
   const router = useRouter();
+  const [isloading, setIsloading] = useState(false);
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -48,30 +51,27 @@ function AuthForm<T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    const result = await onSubmit(data);
+    try {
+      setIsloading(true);
+      const result = await onSubmit(data);
 
-    if (result.success) {
-      toast.custom(() => (
-        <div className="bg-dark-300 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Welcome to BookWise</h2>
-          <p className="text-light-100 text-[13px] mt-1">
-            {isSignIn
-              ? "You have successfully signed in."
-              : "You have successfully signed up."}
-          </p>
-        </div>
-      ));
+      if (result.success) {
+        toast.success("Welcome to BookWise", {
+          description: isSignIn
+            ? "You have successfully signed in."
+            : "You have successfully signed up.",
+        });
 
-      router.push("/");
-    } else {
-      toast.custom(() => (
-        <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-          <h2>Error {isSignIn ? "signing in" : "signing up"}</h2>
-          <p className="text-light-100 text-[13px] mt-1">
-            {result.error ?? "An error occurred."}
-          </p>
-        </div>
-      ));
+        router.push("/");
+      } else {
+        toast.error(`Error ${isSignIn ? "signing in" : "signing up"}`, {
+          description: result.error ?? "An error occurred.",
+        });
+      }
+    } catch (error) {
+      toast.error("Server Error", { description: "Try agian later." });
+    } finally {
+      setIsloading(false);
     }
   };
 
@@ -130,8 +130,19 @@ function AuthForm<T extends FieldValues>({
               )}
             />
           ))}
-          <Button className="form-btn" type="submit">
-            {isSignIn ? "Sign in" : "Sign up"}
+          <Button className="form-btn" type="submit" disabled={isloading}>
+            {isloading ? (
+              <Image
+                src="/icons/loading-circle.svg"
+                alt="loading"
+                width={35}
+                height={35}
+              />
+            ) : isSignIn ? (
+              "Sign in"
+            ) : (
+              "Sign up"
+            )}
           </Button>
         </form>
       </Form>

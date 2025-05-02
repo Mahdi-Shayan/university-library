@@ -14,7 +14,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="overflow-x-hidden">
         {children}
-        <Toaster expand={true} />
+        <Toaster
+          expand={true}
+          toastOptions={{
+            classNames: {
+              default: "!text-white",
+              error: "!bg-red-700",
+              success: "!bg-green",
+              description: "!text-white",
+            },
+          }}
+        />
       </body>
     </html>
   );

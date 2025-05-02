@@ -59,58 +59,40 @@ function FileUploader({
   onChangeField,
 }: Props) {
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filePath: string | null}>({
+  const [file, setFile] = useState<{ filePath: string | null }>({
     filePath: value ?? null,
   });
   const [progress, setProgress] = useState<number>(0);
 
   function onError(): void {
-    toast.custom(() => (
-      <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-        <h2>{type} uploaded failed</h2>
-        <p className="text-light-100 text-[13px] mt-1">
-          Your {type} could not be uploaded. Please try again.
-        </p>
-      </div>
-    ));
+    toast.error(`${type} uploaded failed`, {
+      description: `Your ${type} could not be uploaded. Please try again.`,
+    });
   }
   function onSuccess(res: any): void {
     setFile(res);
 
     onChangeField(res.filePath);
-    toast.custom(() => (
-      <div className="bg-dark-300 text-white p-5 text-[14px] rounded-md w-90">
-        <h2>{type} uploaded succesfully</h2>
-        <p className="text-light-100 text-[13px] mt-1">
-          {res.filePath} uploaded successfuly!
-        </p>
-      </div>
-    ));
+    toast.success(`${type} uploaded succesfully`, {
+      description: `${res.filePath} uploaded successfuly!`,
+    });
   }
   function onValidate(file: File): boolean {
     if (type === "image") {
       if (file.size > 20 * 1024 * 1024) {
-        toast.custom(() => (
-          <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-            <h2>File size too large</h2>
-            <p className="text-light-100 text-[13px] mt-1">
-              Please upload a file that is less that 20MB in size
-            </p>
-          </div>
-        ));
+        toast.error("File size too large", {
+          description:
+            "Please upload a file that is less that 20MB in size",
+        });
 
         return false;
       }
     } else if (type === "video") {
       if (file.size > 50 * 1024 * 1024) {
-        toast.custom(() => (
-          <div className="bg-red-700 text-white p-5 text-[14px] rounded-md w-90">
-            <h2>File size too large</h2>
-            <p className="text-light-100 text-[13px] mt-1">
-              Please upload a file that is less that 50MB in size
-            </p>
-          </div>
-        ));
+        toast.error("File size too large", {
+          description:
+            "Please upload a file that is less that 50MB in size",
+        });
 
         return false;
       }
@@ -185,10 +167,15 @@ function FileUploader({
           </div>
         </div>
       )}
-      {file && file.filePath &&(
+      {file && file.filePath && (
         <div className="relative h-[300px] overflow-hidden">
           {type === "image" ? (
-            <IKImage alt={file.filePath} path={file.filePath} fill className="object-contain" />
+            <IKImage
+              alt={file.filePath}
+              path={file.filePath}
+              fill
+              className="object-contain"
+            />
           ) : type === "video" ? (
             <IKVideo
               path={file.filePath}
