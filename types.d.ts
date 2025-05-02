@@ -35,6 +35,20 @@ export interface BorrowedBook {
   status: "BORROWED" | "RETURNED";
   createAt: Date | null;
 }
+
+interface UserParams {
+  id: string;
+  fullName: string;
+  email: string;
+  universityId: number;
+  password: string;
+  universityCard: string;
+  status: "APPROVED" | "PENDING" | "REJECTED" | null;
+  role: "USER" | "ADMIN" | null;
+  lastActivityDate: string | null;
+  createdAt: Date | null;
+}
+
 export interface Sorts {
   value: string;
   label: string;

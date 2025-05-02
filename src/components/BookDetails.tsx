@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SampleBooks } from "../../types";
+import { SampleBooks, UserParams } from "../../types";
 import Image from "next/image";
-import BorrowBook from "./BorrowBook";
+import BorrowBookButton from "./BorrowBookButton";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 type Details = Omit<
   SampleBooks,
@@ -12,16 +13,16 @@ type Details = Omit<
 
 function BookDetails({
   details,
-  userId,
-  borrowingEligibility,
+  user,
 }: {
   details: Details;
-  userId: string;
-  borrowingEligibility: { isEligible: boolean; message: string };
+  user: UserParams;
 }) {
   const [book, setBook] = useState<SampleBooks>();
   const { author, genre, title, id, rating, description } = details;
   const [updated, setUpdated] = useState(false);
+
+  const queryCalient = new QueryClient();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -66,12 +67,13 @@ function BookDetails({
         </p>
       </div>
       <p className="book-description">{description}</p>
-      <BorrowBook
-        bookId={id}
-        userId={userId}
-        borrowingEligibility={borrowingEligibility}
-        setUpdated={setUpdated}
-      />
+      <QueryClientProvider client={queryCalient}>
+        <BorrowBookButton
+          bookId={id}
+          user={user}
+          setUpdated={setUpdated}
+        />
+      </QueryClientProvider>
     </div>
   );
 }

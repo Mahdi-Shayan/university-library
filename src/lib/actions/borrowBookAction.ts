@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import dayjs from "dayjs";
 import { BorrowBookParams } from "../../../types";
 
-export async function borrowBook(params: BorrowBookParams) {
+export async function borrowBookAction(params: BorrowBookParams) {
   const { userId, bookId } = params;
 
   try {
