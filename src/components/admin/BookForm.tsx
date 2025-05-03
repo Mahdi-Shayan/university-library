@@ -1,6 +1,6 @@
 "use client";
 
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -21,41 +21,75 @@ import FileUploader from "../FileUploader";
 import ColorPicker from "./ColorPicker";
 import { createBook } from "@/lib/actions/admin/actions/createBook";
 import { toast } from "sonner";
+import { useState } from "react";
+import Image from "next/image";
 
-interface Props extends Partial<SampleBooks> {
+interface Props {
   type?: "create" | "update";
+  book?: SampleBooks;
 }
 
-function BookForm({ type, ...book }: Props) {
+function BookForm({ type = "create", book }: Props) {
   const router = useRouter();
+  const [submitimg, setSubmitimg] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof bookSchema>>({
     resolver: zodResolver(bookSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      author: "",
-      genre: "",
-      rating: 1,
-      totalCopies: 1,
-      coverUrl: "",
-      coverColor: "",
-      videoUrl: "",
-      summary: "",
-    },
+    defaultValues:
+      type === "create"
+        ? {
+            title: "",
+            description: "",
+            author: "",
+            genre: "",
+            rating: 1,
+            totalCopies: 1,
+            coverUrl: "",
+            coverColor: "",
+            videoUrl: "",
+            summary: "",
+          }
+        : { ...book },
   });
 
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-    const result = await createBook(values);
+    try {
+      setSubmitimg(true);
+      if (type === "create") {
+        const result = await createBook(values);
 
-    console.log(values);
+        if (result.success) {
+          toast.success("Book created successfully");
 
-    if (result.success) {
-      toast.success("Book created successfully");
+          router.push(`/admin/books/${result.data.id}`);
+        } else {
+          toast.error(`${result.message}`);
+        }
+      } else {
+        if (!book || !book.id) {
+          toast.error("No book selected to update.");
+          return;
+        }
 
-      router.push(`/admin/books/${result.data.id}`);
-    } else {
-      toast.error(`${result.message}`);
+        const res = await fetch(`/api/books/${book.id}`, {
+          method: "PATCH",
+          body: JSON.stringify(values),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast.error(data?.error || "Failed to update book.");
+          return;
+        }
+
+        toast.success("Book updated successfully");
+      }
+    } catch (error) {
+      toast.error("Server error please try again later.");
+    } finally {
+      setSubmitimg(false);
     }
   };
 
@@ -275,7 +309,18 @@ function BookForm({ type, ...book }: Props) {
             )}
           />
           <Button type="submit" className="book-form_btn text-white">
-            Add Book to Library
+            {submitimg ? (
+              <Image
+                src="/icons/loading-circle.svg"
+                alt="Loading"
+                width={40}
+                height={40}
+              />
+            ) : type === "create" ? (
+              "Add Book to Library"
+            ) : (
+              "Update The Book"
+            )}
           </Button>
         </form>
       </Form>

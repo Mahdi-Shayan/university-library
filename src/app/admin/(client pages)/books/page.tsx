@@ -1,3 +1,6 @@
+"use client"
+
+import AllBooksTable from "@/components/admin/AllBooksTable";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -14,9 +17,7 @@ function Books() {
           </Button>
         </div>
 
-        <div className="mt-7 w-full overflow-hidden">
-          <p>Table</p>
-        </div>
+        <AllBooksTable />
       </section>
     </>
   );
