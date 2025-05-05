@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 async function fetchData(id?: string) {
-  const endpoint = `/api/users/${id && id}`;
+  const endpoint = id ? `/api/users/${id}` : "/api/users";
 
   const res = await fetch(endpoint);
   if (!res.ok) {

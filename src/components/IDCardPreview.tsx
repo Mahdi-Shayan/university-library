@@ -12,11 +12,11 @@ const {
 
 interface Props {
   path: string;
-  username: string;
+  username?: string;
 }
 
 function IDCardPreview({ path, username }: Props) {
-  if (!path || !username)
+  if (!path)
     return (
       <div className="w-full h-full">
         <Image

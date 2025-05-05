@@ -13,32 +13,35 @@ interface Props {
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<any, Error>>;
-  bookId: string;
+  id: string;
+  dataType: "users" | "books";
 }
 
-function EditOrDeleteBook({ refetch, bookId }: Props) {
+function EditOrDeleteBook({ refetch, id, dataType }: Props) {
   const [action, setAction] = useState<boolean>(false);
 
-  async function editBpok() {}
+  const type = dataType === "users" ? "user" : "book";
+  const endPoint =
+    dataType === "users" ? `/api/users/${id}` : `/api/books/${id}`;
 
-  async function deleteBook() {
+  async function deleteData() {
     try {
       setAction(true);
-      const res = await fetch(`/api/books/${bookId}`, {
+      const res = await fetch(endPoint, {
         method: "DELETE",
       });
 
       const result = await res.json();
 
       if (!res.ok) {
-        toast.error(result?.error || "Failed to delete book");
+        toast.error(result?.error || `Failed to delete ${type}`);
         return;
       }
 
-      toast.success("Book deleted successfully");
+      toast.success(`${type.toUpperCase()} deleted successfully`);
       refetch();
     } catch (error) {
-      console.error("Error deleting book:", error);
+      console.error(`Error deleting ${type}:`, error);
       toast.error("Something went wrong");
     } finally {
       setAction(false);
@@ -47,15 +50,17 @@ function EditOrDeleteBook({ refetch, bookId }: Props) {
 
   return (
     <div className="flex gap-4 items-center">
-      <button className="text-sky-500" disabled={action}>
-        <Link prefetch={true} href={`/admin/books/update/${bookId}`}>
-          <Edit3 size={22} />
-        </Link>
-      </button>
+      {dataType === "books" && (
+        <button className="text-sky-500" disabled={action}>
+          <Link prefetch={true} href={`/admin/books/update/${id}`}>
+            <Edit3 size={22} />
+          </Link>
+        </button>
+      )}
       <button
         className="text-red cursor-pointer"
         disabled={action}
-        onClick={deleteBook}
+        onClick={deleteData}
       >
         <Trash2 size={22} />
       </button>

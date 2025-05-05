@@ -73,7 +73,11 @@ function AllBooksTable() {
                 {dayjs(book.createAt).format("MMM DD YYYY")}
               </TableCell>
               <TableCell>
-                <EditOrDeleteBook refetch={refetch} bookId={book.id} />
+                <EditOrDeleteBook
+                  refetch={refetch}
+                  id={book.id}
+                  dataType="books"
+                />
               </TableCell>
             </TableRow>
           ))}
