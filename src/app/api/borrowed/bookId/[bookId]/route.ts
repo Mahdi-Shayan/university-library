@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { books, borrowRecords } from "@/db/schema";
+import { borrowRecords } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -18,7 +18,7 @@ export async function GET(
     const book = await db
       .select()
       .from(borrowRecords)
-      .where(eq(borrowRecords.bookId, bookId))
+      .where(eq(borrowRecords.bookId, bookId));
 
     return new NextResponse(JSON.stringify(book), { status: 200 });
   } catch (error) {

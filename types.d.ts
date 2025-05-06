@@ -80,3 +80,9 @@ export interface BorrowBookParams {
   userId: string;
   bookId: string;
 }
+
+export interface BorrowBookWithDetails {
+  books: SampleBooks;
+  users: UserParams;
+  borrow_records: BorrowedBook;
+}

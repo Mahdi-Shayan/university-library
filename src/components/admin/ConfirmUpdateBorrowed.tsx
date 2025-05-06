@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,48 +15,65 @@ import {
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 interface Props {
-  role: "ADMIN" | "USER";
+  status: "BORROWED" | "RETURNED" | "LATE RETURNED";
+  bookId: string;
   userId: string;
   className?: string;
   onConfirm: () => void;
+  disable?: boolean;
 }
 
-function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
+function ConfirmUpdateBorrowed({
+  onConfirm,
+  status,
+  bookId,
+  userId,
+  className,
+  disable,
+}: Props) {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
-    async function updateUser() {
-      const res = await fetch(`/api/users/${userId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ role }),
-      });
+    async function updateStatus() {
+      const res = await fetch(
+        `/api/borrowed/status?bookId=${bookId}&userId=${userId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        }
+      );
 
       const result = await res.json();
 
       if (!res.ok) {
-        toast.error(result?.error || "Failed to update user role");
+        toast.error(result?.error || "Failed to update borrowed status.");
         return;
       }
 
-      toast.success("User role updated successfully");
+      toast.success(`Borrowed updated to ${status} successfully`);
       setIsConfirmed(false);
       onConfirm();
     }
 
-    if (isConfirmed) updateUser();
-  }, [isConfirmed]);
+    if (isConfirmed && status !== "BORROWED") {
+      updateStatus();
+    }
+  }, [isConfirmed, userId, bookId, status]);
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger className={cn("capitalize", className)}>
-        {role.toLocaleLowerCase()}
+      <AlertDialogTrigger
+        className={cn(
+          "capitalize disabled:opacity-50",
+          className,
+          disable && "!cursor-no-drop"
+        )}
+        disabled={disable}
+      >
+        {status.toLocaleLowerCase()}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -69,9 +88,7 @@ function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
               height={20}
               className="inline mr-1 mb-1"
             />
-            {role === "ADMIN"
-              ? "This action allows the user to access the admin dashboard. make sure Then change the user role."
-              : " This action prevents the user from accessing the admin"}
+            if you are not sure, it will cause problems in the loans!
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -80,7 +97,14 @@ function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
           </AlertDialogCancel>
           <AlertDialogAction
             className="bg-primary-admin hover:bg-primary-admin/90 text-white cursor-pointer"
-            onClick={() => setIsConfirmed(true)}
+            onClick={() => {
+              if (isConfirmed && status === "BORROWED") {
+                toast.error("You can not undo status!");
+                setIsConfirmed(false);
+                return;
+              }
+              setIsConfirmed(true);
+            }}
           >
             Confirm
           </AlertDialogAction>
@@ -89,4 +113,4 @@ function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
     </AlertDialog>
   );
 }
-export default ConfirmUpdateUser;
+export default ConfirmUpdateBorrowed;
