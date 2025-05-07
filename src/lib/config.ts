@@ -11,6 +11,9 @@ const config = {
       reddisUrl: process.env.UPSTASH_REDIS_URL!,
       reddisToken: process.env.UPSTASH_REDIS_TOKEN!,
     },
+    resend: {
+      apiKey: process.env.RESEND_API_KEY!,
+    },
   },
 };
 

@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { getInitials } from "@/utils";
 import dayjs from "dayjs";
 import BorrowedStatusSelector from "./BorrowedStatusSelector";
-import { Button } from "../ui/button";
+import SendReceiptEmail from "./SendReceiptEmail";
 
 function AllBorrowRecordsTable() {
   const { data, isLoading, refetch } = useBorrowedBooks("allWidthDetails");
@@ -128,15 +128,16 @@ function AllBorrowRecordsTable() {
                 </TableCell>
                 <TableCell>{getDate(borrow_records.dueDate)}</TableCell>
                 <TableCell>
-                  <Button className="bg-light-300 hover:bg-indigo-100 text-primary-admin">
-                    <Image
-                      src="/icons/admin/receipt.svg"
-                      alt="receipt"
-                      width={16}
-                      height={16}
-                    />
-                    Generate
-                  </Button>
+                  <SendReceiptEmail
+                    body={{
+                      author: books.author,
+                      title: books.title,
+                      genre: books.genre,
+                      borrowDate: borrow_records.borrowDate,
+                      dueDate: borrow_records.dueDate,
+                      email: users.email,
+                    }}
+                  />
                 </TableCell>
               </TableRow>
             );
