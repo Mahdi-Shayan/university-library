@@ -15,14 +15,15 @@ import BookCover from "../BookCover";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import EditOrDeleteData from "./EditOrDeleteData";
+import ShowError from "./ShowError";
 
 function AllBooksTable() {
-  const { data, isLoading, refetch } = useBooks();
+  const { data, isLoading, refetch, isError } = useBooks();
   const router = useRouter();
 
   if (isLoading)
     return (
-      <div className="w-full h-[350px] flex place-content-center">
+      <div className="w-full h-115 flex place-content-center">
         <Image
           src="/icons/loading-circle.svg"
           alt="loading"
@@ -31,6 +32,15 @@ function AllBooksTable() {
         />
       </div>
     );
+
+  if (isError) {
+    return (
+      <ShowError
+        message="Something went wrong, please try again later!"
+        title="Error 500"
+      />
+    );
+  }
 
   return (
     <section className="mt-7 w-full overflow-hidden">

@@ -18,14 +18,16 @@ import { getInitials } from "@/utils";
 import dayjs from "dayjs";
 import BorrowedStatusSelector from "./BorrowedStatusSelector";
 import SendReceiptEmail from "./SendReceiptEmail";
+import ShowError from "./ShowError";
 
 function AllBorrowRecordsTable() {
-  const { data, isLoading, refetch } = useBorrowedBooks("allWidthDetails");
+  const { data, isLoading, refetch, isError } =
+    useBorrowedBooks("allWidthDetails");
   const router = useRouter();
 
   if (isLoading) {
     return (
-      <div className="w-full h-[350px] flex place-content-center">
+      <div className="w-full h-115 flex place-content-center">
         <Image
           src="/icons/loading-circle.svg"
           alt="loading"
@@ -33,6 +35,33 @@ function AllBorrowRecordsTable() {
           height={60}
         />
       </div>
+    );
+  }
+
+  if (!data.length) {
+    return (
+      <section className="flex flex-col items-center justify-center gap-2 h-115 w-full">
+        <Image
+          src="/images/no-borrowed.png"
+          alt="no borrowed book"
+          height={350}
+          width={350}
+          className="mb-5"
+        />
+        <h2 className="font-semibold text-2xl">No Boorowed Book Here!</h2>
+        <p className="text-light-500">
+          There are no borrow book requests awaiting your review at this
+          time.
+        </p>
+      </section>
+    );
+  }
+  if (isError) {
+    return (
+      <ShowError
+        message="Something went wrong, please try again later!"
+        title="Error 500"
+      />
     );
   }
 

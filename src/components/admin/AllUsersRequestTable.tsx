@@ -18,17 +18,15 @@ import { cn } from "@/lib/utils";
 import { useUsersRequest } from "@/hooks/useUsersRequest";
 import { UserParams } from "../../../types";
 import UserStatusSelector from "./UserStatusSelector";
-import { CircleX } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
+import ShowError from "./ShowError";
 
 function AllUsersRequestTable() {
-  const { data, isLoading } = useUsersRequest();
+  const { data, isLoading, isError } = useUsersRequest();
   const [IDCardFile, setIDCardFile] = useState<string>();
-  const queryClient = useQueryClient();
 
   if (isLoading)
     return (
-      <div className="w-full h-[350px] flex place-content-center">
+      <div className="w-full h-115 flex place-content-center">
         <Image
           src="/icons/loading-circle.svg"
           alt="loading"
@@ -37,6 +35,36 @@ function AllUsersRequestTable() {
         />
       </div>
     );
+
+  if (!data.length) {
+    return (
+      <section className="flex flex-col items-center justify-center gap-2 h-115 w-full">
+        <Image
+          src="/images/no-account-request.png"
+          alt="no borrowed book"
+          height={350}
+          width={350}
+          className="mb-5"
+        />
+        <h2 className="font-semibold text-2xl">
+          No Pending Account Request
+        </h2>
+        <p className="text-light-500">
+          There are no user account requests awaiting your review at this
+          time.
+        </p>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ShowError
+        message="Something went wrong, please try again later!"
+        title="Error 500"
+      />
+    );
+  }
 
   return (
     <section className="relative mt-7 w-full">
