@@ -1,21 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import ConfirmUpdateUser from "./ConfirmUpdateUser";
+import { cn } from "@/lib/utils";
 
 interface Props {
-  userRole: "ADMIN" | "USER";
   userId: string;
+  userStatus: "PENDING" | "APPROVED" | "REJECTED";
 }
 
-function UserRoleSelect({ userRole, userId }: Props) {
-  const [role, setRole] = useState<"ADMIN" | "USER">(userRole);
+function UserStatusSelector({ userId, userStatus }: Props) {
+  const [status, setStatus] = useState<
+    "PENDING" | "APPROVED" | "REJECTED"
+  >(userStatus);
   const [openSelector, setOpenSelector] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const baseClass =
-    "relative rounded-full capitalize w-max h-7 p-3 cursor-pointer";
+    "relative rounded-[4px] capitalize w-max h-7 p-4 cursor-pointer";
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -36,19 +38,21 @@ function UserRoleSelect({ userRole, userId }: Props) {
       className={cn(
         baseClass,
         "flex items-center justify-center w-fit",
-        role === "ADMIN"
+        status === "APPROVED"
           ? "text-green !bg-green/10"
-          : "text-red-800 !bg-red-800/10"
+          : status === "PENDING"
+            ? "text-yellow-500 !bg-yellow-400/10"
+            : "text-red-800 !bg-red-800/10"
       )}
       onClick={(e) => {
         e.stopPropagation();
         setOpenSelector((pre) => !pre);
       }}
     >
-      {role.toLowerCase()}
+      <p>Account {status.toLowerCase()}</p>
       <div
         className={cn(
-          "absolute left-[110%] -top-3 flex flex-col gap-2 p-3 bg-white rounded-sm z-30 shadow-sm transition-all duration-100",
+          "absolute right-[110%] -top-13 flex flex-col gap-2 p-3 bg-white rounded-sm z-30 shadow-sm transition-all duration-100",
           openSelector
             ? "opacity-100 scale-100 pointer-events-auto"
             : "opacity-0 scale-95 pointer-events-none"
@@ -56,28 +60,41 @@ function UserRoleSelect({ userRole, userId }: Props) {
         onClick={(e) => e.stopPropagation()}
       >
         <ConfirmUpdateUser
-          type="role"
+          type="status"
           userId={userId}
-          role="ADMIN"
+          status="APPROVED"
           className={cn(
             baseClass,
             "flex items-center text-green !bg-green/10"
           )}
           onConfirm={() => {
-            setRole("ADMIN");
+            setStatus("APPROVED");
             setOpenSelector(false);
           }}
         />
         <ConfirmUpdateUser
-          type="role"
+          type="status"
           userId={userId}
-          role="USER"
+          status="PENDING"
+          className={cn(
+            baseClass,
+            "flex items-center text-yellow-500 !bg-yellow-400/10"
+          )}
+          onConfirm={() => {
+            setStatus("PENDING");
+            setOpenSelector(false);
+          }}
+        />
+        <ConfirmUpdateUser
+          type="status"
+          userId={userId}
+          status="REJECTED"
           className={cn(
             baseClass,
             "flex items-center text-red-800 !bg-red-800/10"
           )}
           onConfirm={() => {
-            setRole("USER");
+            setStatus("REJECTED");
             setOpenSelector(false);
           }}
         />
@@ -85,5 +102,4 @@ function UserRoleSelect({ userRole, userId }: Props) {
     </div>
   );
 }
-
-export default UserRoleSelect;
+export default UserStatusSelector;

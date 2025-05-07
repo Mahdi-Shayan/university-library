@@ -14,7 +14,7 @@ import Image from "next/image";
 import BookCover from "../BookCover";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import EditOrDeleteBook from "./EditOrDeleteBook";
+import EditOrDeleteData from "./EditOrDeleteData";
 
 function AllBooksTable() {
   const { data, isLoading, refetch } = useBooks();
@@ -73,7 +73,7 @@ function AllBooksTable() {
                 {dayjs(book.createAt).format("MMM DD YYYY")}
               </TableCell>
               <TableCell>
-                <EditOrDeleteBook
+                <EditOrDeleteData
                   refetch={refetch}
                   id={book.id}
                   dataType="books"

@@ -43,7 +43,7 @@ interface UserParams {
   universityId: number;
   password: string;
   universityCard: string;
-  status: "APPROVED" | "PENDING" | "REJECTED" | null;
+  status: "APPROVED" | "PENDING" | "REJECTED";
   role: "USER" | "ADMIN";
   lastActivityDate: string | null;
   createdAt: Date | null;

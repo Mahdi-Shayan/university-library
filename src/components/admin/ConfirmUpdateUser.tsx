@@ -12,28 +12,63 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { UserParams } from "../../../types";
 
 interface Props {
-  role: "ADMIN" | "USER";
+  type: "status" | "role";
+  role?: "ADMIN" | "USER";
+  status?: "PENDING" | "APPROVED" | "REJECTED";
   userId: string;
   className?: string;
   onConfirm: () => void;
 }
 
-function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
+function ConfirmUpdateUser({
+  role,
+  status,
+  type,
+  userId,
+  className,
+  onConfirm,
+}: Props) {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
+  const queryClient = useQueryClient();
+
+  if (type === "status" && !status) {
+    throw new Error("User status require");
+  }
+  if (type === "role" && !role) {
+    throw new Error("User role require");
+  }
+
   useEffect(() => {
+    async function deleteUser() {
+      const res = await fetch(`/api/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        toast.error(result?.error || "Failed to update user role");
+        return;
+      }
+    }
     async function updateUser() {
       const res = await fetch(`/api/users/${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ role }),
+        body: JSON.stringify({ role, status }),
       });
 
       const result = await res.json();
@@ -48,13 +83,20 @@ function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
       onConfirm();
     }
 
-    if (isConfirmed) updateUser();
+    if (isConfirmed) {
+      updateUser();
+    }
+    if (isConfirmed && status === "REJECTED") {
+      deleteUser()
+    }
   }, [isConfirmed]);
 
   return (
     <AlertDialog>
       <AlertDialogTrigger className={cn("capitalize", className)}>
-        {role.toLocaleLowerCase()}
+        {type === "role"
+          ? role?.toLocaleLowerCase()
+          : status?.toLocaleLowerCase()}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -69,9 +111,15 @@ function ConfirmUpdateUser({ role, userId, className, onConfirm }: Props) {
               height={20}
               className="inline mr-1 mb-1"
             />
-            {role === "ADMIN"
-              ? "This action allows the user to access the admin dashboard. make sure Then change the user role."
-              : " This action prevents the user from accessing the admin"}
+            {role
+              ? role === "ADMIN"
+                ? "This action allows the user to access the admin dashboard. make sure Then change the user role."
+                : " This action prevents the user from accessing the admin"
+              : status === "APPROVED"
+                ? "User allows to borrow books, Be sure then chnage status to APPROVED."
+                : status === "PENDING"
+                  ? "User can not borrow books, be sure then change the status."
+                  : "This action going to DELETE the user!"}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

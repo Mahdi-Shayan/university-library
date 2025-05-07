@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { Edit3, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { ForwardRefExoticComponent, ReactNode, useState } from "react";
 import { toast } from "sonner";
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
   dataType: "users" | "books";
 }
 
-function EditOrDeleteBook({ refetch, id, dataType }: Props) {
+function EditOrDeleteData({ refetch, dataType, id }: Props) {
   const [action, setAction] = useState<boolean>(false);
 
   const type = dataType === "users" ? "user" : "book";
@@ -67,4 +67,4 @@ function EditOrDeleteBook({ refetch, id, dataType }: Props) {
     </div>
   );
 }
-export default EditOrDeleteBook;
+export default EditOrDeleteData;

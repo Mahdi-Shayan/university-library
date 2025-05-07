@@ -8,27 +8,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { BorrowedBook, UserParams } from "../../../types";
 import Image from "next/image";
 import dayjs from "dayjs";
-import EditOrDeleteData from "./EditOrDeleteData";
-import { useUsers } from "@/hooks/useUsers";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { getInitials } from "@/utils";
-import UserRoleSelect from "./UserRoleSelect";
-import { useBorrowedBooks } from "@/hooks/useBorrowedBooks";
-import { SquareArrowOutUpRight } from "lucide-react";
-import { Button } from "../ui/button";
 import { useState } from "react";
 import IDCardPreview from "../IDCardPreview";
 import { cn } from "@/lib/utils";
+import { useUsersRequest } from "@/hooks/useUsersRequest";
+import { UserParams } from "../../../types";
+import UserStatusSelector from "./UserStatusSelector";
+import { CircleX } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
-function AllUsersTable() {
-  const { data, isLoading, refetch } = useUsers();
-  const { data: borrowed, isLoading: loading } = useBorrowedBooks("all");
+function AllUsersRequestTable() {
+  const { data, isLoading } = useUsersRequest();
   const [IDCardFile, setIDCardFile] = useState<string>();
+  const queryClient = useQueryClient();
 
-  if (isLoading || loading)
+  if (isLoading)
     return (
       <div className="w-full h-[350px] flex place-content-center">
         <Image
@@ -39,11 +37,6 @@ function AllUsersTable() {
         />
       </div>
     );
-
-  function getBorrowedLength(id: string): number {
-    return (borrowed as BorrowedBook[]).filter((b) => b.userId === id)
-      .length;
-  }
 
   return (
     <section className="relative mt-7 w-full">
@@ -59,17 +52,15 @@ function AllUsersTable() {
         )}
       >
         <TableCaption>
-          A list of your all users ({data.length})
+          A list of your all users request ({data.length})
         </TableCaption>
         <TableHeader>
           <TableRow className="bg-light-300 !border-0">
-            <TableHead className="w-[32%]">Name</TableHead>
+            <TableHead className="w-[35%]">Name</TableHead>
             <TableHead className="min-w-35">Date Joined</TableHead>
-            <TableHead className="min-w-25">Role</TableHead>
-            <TableHead className="min-w-30">Books Params</TableHead>
             <TableHead className="min-w-35">University ID No</TableHead>
             <TableHead className="min-w-35">University ID Card</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead className="min-w-35">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -83,31 +74,32 @@ function AllUsersTable() {
                 </Avatar>
                 <div>
                   <h3 className="font-semibold">{user.fullName}</h3>
-                  <p className="text-light-500">{user.email}</p>
+                  <p className="text-light-500 font-light">{user.email}</p>
                 </div>
               </TableCell>
               <TableCell>
                 {dayjs(user.createdAt).format("MMM DD YYYY")}
               </TableCell>
-              <TableCell>
-                <UserRoleSelect userRole={user.role} userId={user.id} />
-              </TableCell>
-              <TableCell>{getBorrowedLength(user.id)}</TableCell>
               <TableCell>{user.universityId}</TableCell>
               <TableCell>
                 <button
-                  className="flex items-center gap-2 text-blue-400 hover:underline cursor-pointer"
+                  className="flex items-center gap-[6px] cursor-pointer text-blue-400 hover:underline"
                   onClick={() => setIDCardFile(user.universityCard)}
                   onBlur={() => setIDCardFile(undefined)}
                 >
-                  View ID Card <SquareArrowOutUpRight size={18} />
+                  <Image
+                    src="/icons/admin/eye.svg"
+                    alt="eye icon"
+                    height={17}
+                    width={17}
+                  />
+                  View ID Card
                 </button>
               </TableCell>
               <TableCell>
-                <EditOrDeleteData
-                  refetch={refetch}
-                  id={user.id}
-                  dataType="users"
+                <UserStatusSelector
+                  userId={user.id}
+                  userStatus={user.status}
                 />
               </TableCell>
             </TableRow>
@@ -117,4 +109,4 @@ function AllUsersTable() {
     </section>
   );
 }
-export default AllUsersTable;
+export default AllUsersRequestTable;
