@@ -1,6 +1,6 @@
 import BookCover from "@/components/BookCover";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Edit3, MoveLeft } from "lucide-react";
+import { CalendarDays, Edit3 } from "lucide-react";
 import Link from "next/link";
 import { isValidUUID } from "@/lib/helper/checkIsValidId";
 import ShowError from "@/components/admin/ShowError";
@@ -9,6 +9,7 @@ import { books } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import dayjs from "dayjs";
 import IKVideoReview from "@/components/admin/IKVideoReview";
+import GoBackButton from "@/components/admin/GoBackButton";
 
 async function BookDetails({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -34,10 +35,7 @@ async function BookDetails({ params }: { params: { id: string } }) {
 
   return (
     <section>
-      <Button className="back-btn">
-        <MoveLeft />
-        <Link href="/admin/books">Go back</Link>
-      </Button>
+      <GoBackButton />
       <div className="flex flex-col gap-15">
         {/* HEADER */}
         <div className="flex gap-15 max-lg:flex-col max-lg:gap-10">

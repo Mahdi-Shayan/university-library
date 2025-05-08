@@ -1,12 +1,10 @@
 import BookForm from "@/components/admin/BookForm";
-import { Button } from "@/components/ui/button";
 import { db } from "@/db/drizzle";
 import { books } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { MoveLeft } from "lucide-react";
-import Link from "next/link";
 import ShowError from "@/components/admin/ShowError";
 import { isValidUUID } from "@/lib/helper/checkIsValidId";
+import GoBackButton from "@/components/admin/GoBackButton";
 
 async function UpdateBook({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -32,10 +30,7 @@ async function UpdateBook({ params }: { params: { id: string } }) {
 
   return (
     <section className="w-full max-w-2xl">
-      <Button className="back-btn">
-        <MoveLeft />
-        <Link href="/admin/books">Go back</Link>
-      </Button>
+      <GoBackButton />
       <BookForm type="update" book={book} />
     </section>
   );
