@@ -1,9 +1,12 @@
 "use client";
 
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { SampleBooks, BorrowedBook } from "../../types";
 import BookCover from "./BookCover";
 import Image from "next/image";
+
+dayjs.extend(utc);
 
 interface Props {
   books: SampleBooks;
@@ -11,12 +14,12 @@ interface Props {
 }
 
 function BorrowedBookPreview({ books, borrow_records }: Props) {
-  const borrowDate = dayjs(borrow_records.borrowDate);
-  const dueDate = dayjs(borrow_records.dueDate);
+  const borrowDate = dayjs.utc(borrow_records.borrowDate);
+  const dueDate = dayjs.utc(borrow_records.dueDate);
   const driff = dueDate.diff(borrowDate, "days");
 
   return (
-    <div className="borrowed-book">
+    <div className="borrowed-book flex flex-col">
       <div
         className="borrowed-book_cover"
         style={{
@@ -31,39 +34,42 @@ function BorrowedBookPreview({ books, borrow_records }: Props) {
           />
         </div>
       </div>
-      <div className="mt-5 space-y-2">
-        <h3 className="text-xl font-semibold">
-          {books.title}-By {books.author}
-        </h3>
-        <p className="text-light-100">{books.genre}</p>
-      </div>
-      <div className="mt-5 text-light-100 space-y-2">
-        <p className="flex gap-2">
-          <Image
-            src="/icons/book-2.svg"
-            alt="borrowed icon"
-            width={20}
-            height={20}
-          />
-          Borrowed on {borrowDate.format("MMM DD")}
-        </p>
-        <p className="flex gap-2">
-          <Image
-            src={
-              borrow_records.returnDate
-                ? "/icons/tick.svg"
-                : "/icons/calendar.svg"
-            }
-            alt="calendar icon"
-            width={20}
-            height={20}
-          />
-          {borrow_records.returnDate
-            ? `Returned on ${dayjs(borrow_records.returnDate).format(
-                "D[th] MMM"
-              )}`
-            : `${driff} days left to due`}
-        </p>
+      {/* BOOK INFO */}
+      <div className="flex flex-col justify-between h-full gap-5 mt-5">
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold">
+            {books.title}-By {books.author}
+          </h3>
+          <p className="text-light-100">{books.genre}</p>
+        </div>
+        <div className="text-light-100 space-y-2">
+          <p className="flex gap-2">
+            <Image
+              src="/icons/book-2.svg"
+              alt="borrowed icon"
+              width={20}
+              height={20}
+            />
+            Borrowed on {borrowDate.format("MMM DD")}
+          </p>
+          <p className="flex gap-2">
+            <Image
+              src={
+                borrow_records.returnDate
+                  ? "/icons/tick.svg"
+                  : "/icons/calendar.svg"
+              }
+              alt="calendar icon"
+              width={20}
+              height={20}
+            />
+            {borrow_records.returnDate
+              ? `Returned on ${dayjs(borrow_records.returnDate).format(
+                  "D[th] MMM"
+                )}`
+              : `${driff} days left to due`}
+          </p>
+        </div>
       </div>
     </div>
   );

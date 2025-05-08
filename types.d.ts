@@ -32,7 +32,7 @@ export interface BorrowedBook {
   borrowDate: Date;
   dueDate: string;
   returnDate: string | null;
-  status: "BORROWED" | "RETURNED";
+  status: "BORROWED" | "RETURNED" | "LATE RETURNED";
   createAt: Date | null;
 }
 

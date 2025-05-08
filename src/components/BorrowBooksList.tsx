@@ -18,9 +18,11 @@ async function BorrowBooksList({ userId }: Props) {
     .select()
     .from(borrowRecords)
     .where(eq(borrowRecords.userId, userId))
-    .innerJoin(
-      books,
-      eq(borrowRecords.bookId, books.id)
+    .innerJoin(books, eq(borrowRecords.bookId, books.id))
+    .orderBy(
+      eq(borrowRecords.status, "LATE RETURNED"),
+      eq(borrowRecords.status, "RETURNED"),
+      eq(borrowRecords.status, "BORROWED")
     )) as IBorrowedBook[];
 
   return (

@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { ReceiptParams } from "../../../types";
+import { BorrowedBook, ReceiptParams } from "../../../types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-function SendReceiptEmail({ body }: ReceiptParams) {
+type Props = Pick<BorrowedBook, "status"> & ReceiptParams;
+
+function SendReceiptEmail({ body, status }: Props) {
   const [send, setSend] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,7 +26,6 @@ function SendReceiptEmail({ body }: ReceiptParams) {
           toast.error(result?.error);
           return;
         }
-        console.log("Email sent");
 
         toast.success("Receipt sent successfully");
         setSend(false);
@@ -38,8 +39,9 @@ function SendReceiptEmail({ body }: ReceiptParams) {
 
   return (
     <Button
-      className="bg-light-300 hover:bg-indigo-100 text-primary-admin"
+      className="!bg-light-300 hover:bg-indigo-100 text-primary-admin disabled:opacity-30"
       onClick={() => setSend(true)}
+      disabled={status !== "BORROWED"}
     >
       <Image
         src="/icons/admin/receipt.svg"

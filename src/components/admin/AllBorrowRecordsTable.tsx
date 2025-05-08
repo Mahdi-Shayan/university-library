@@ -166,6 +166,7 @@ function AllBorrowRecordsTable() {
                       dueDate: borrow_records.dueDate,
                       email: users.email,
                     }}
+                    status={borrow_records.status}
                   />
                 </TableCell>
               </TableRow>

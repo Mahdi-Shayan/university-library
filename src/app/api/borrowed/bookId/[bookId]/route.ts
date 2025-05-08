@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
 import { borrowRecords } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -18,7 +18,12 @@ export async function GET(
     const book = await db
       .select()
       .from(borrowRecords)
-      .where(eq(borrowRecords.bookId, bookId));
+      .where(
+        and(
+          eq(borrowRecords.bookId, bookId),
+          eq(borrowRecords.status, "BORROWED")
+        )
+      );
 
     return new NextResponse(JSON.stringify(book), { status: 200 });
   } catch (error) {
