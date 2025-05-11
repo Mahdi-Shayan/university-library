@@ -588,19 +588,19 @@
   }
 
   .admin-sidebar .logo {
-    @apply flex flex-row items-center gap-2 border-b border-dashed border-primary-admin/20 pb-10 max-md:justify-center;
+    @apply flex flex-row items-center gap-2 border-b border-dashed border-primary-admin/20 pb-10 max-xl:justify-center;
   }
 
   .admin-sidebar .logo h1 {
-    @apply text-2xl font-semibold text-primary-admin max-md:hidden;
+    @apply text-2xl font-semibold text-primary-admin max-xl:hidden;
   }
 
   .admin-sidebar .link {
-    @apply flex flex-row items-center w-full max-md:w-[95%] gap-2 rounded-lg px-5 py-3.5 max-md:justify-center;
+    @apply flex flex-row items-center w-full max-xl:w-[95%] gap-2 rounded-lg px-5 py-3.5 max-xl:justify-center;
   }
 
   .admin-sidebar .link p {
-    @apply text-base font-medium max-md:hidden;
+    @apply text-base font-medium max-xl:hidden;
   }
 
   .admin-sidebar .user {

@@ -8,7 +8,7 @@ import { Session } from "next-auth";
 function Sidebar({ session }: { session: Session }) {
   return (
     <>
-      <div className="admin-sidebar max-sm:px-2">
+      <div className="admin-sidebar max-lg:px-3">
         <div>
           <div className="logo">
             <Image
@@ -31,7 +31,7 @@ function Sidebar({ session }: { session: Session }) {
               {getInitials(session.user?.name || "IN")}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col max-md:hidden">
+          <div className="flex flex-col max-xl:hidden">
             <p className="font-normal">{session.user?.name}</p>
             <p className="font-light text-light-500 text-xs">{session.user?.email}</p>
           </div>

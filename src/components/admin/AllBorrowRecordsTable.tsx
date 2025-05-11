@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import BorrowedStatusSelector from "./BorrowedStatusSelector";
 import SendReceiptEmail from "./SendReceiptEmail";
 import ShowError from "./ShowError";
+import EmptyList from "./EmptyList";
 
 function AllBorrowRecordsTable() {
   const { data, isLoading, refetch, isError } =
@@ -40,20 +41,11 @@ function AllBorrowRecordsTable() {
 
   if (!data.length) {
     return (
-      <section className="flex flex-col items-center justify-center gap-2 h-115 w-full">
-        <Image
-          src="/images/no-borrowed.png"
-          alt="no borrowed book"
-          height={350}
-          width={350}
-          className="mb-5"
-        />
-        <h2 className="font-semibold text-2xl">No Boorowed Book Here!</h2>
-        <p className="text-light-500">
-          There are no borrow book requests awaiting your review at this
-          time.
-        </p>
-      </section>
+      <EmptyList
+        title="No Borrowed Books"
+        message="There are no borrowed books at this time."
+        imageUrl="/images/no-borrowed.png"
+      />
     );
   }
   if (isError) {
