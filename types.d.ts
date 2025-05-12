@@ -45,7 +45,7 @@ interface UserParams {
   universityCard: string;
   status: "APPROVED" | "PENDING" | "REJECTED";
   role: "USER" | "ADMIN";
-  lastActivityDate: string | null;
+  lastActivityAt: Date | null;
   createdAt: Date | null;
 }
 

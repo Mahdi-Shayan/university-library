@@ -7,6 +7,7 @@ import {
   pgEnum,
   date,
   timestamp,
+  serial,
 } from "drizzle-orm/pg-core";
 
 export const STATUS_ENUM = pgEnum("status", [
@@ -30,7 +31,9 @@ export const users = pgTable("users", {
   universityCard: text("university_card").notNull(),
   status: STATUS_ENUM("status").default("PENDING").notNull(),
   role: STATUS_ROLE("role").default("USER"),
-  lastActivityDate: date("last_activity_date").defaultNow(),
+  lastActivityAt: timestamp("last_activity_at", {
+    withTimezone: true,
+  }).defaultNow(),
   createdAt: timestamp("create_at", {
     withTimezone: true,
   }).defaultNow(),
@@ -69,4 +72,12 @@ export const borrowRecords = pgTable("borrow_records", {
   returnDate: date("return_date"),
   status: BORROW_STATUS_ENUM("status").default("LATE RETURNED").notNull(),
   createAt: timestamp("create_at", { withTimezone: true }).defaultNow(),
+});
+
+export const dailyStats = pgTable("daily_stats", {
+  id: serial("id").primaryKey(),
+  date: date("date").notNull().unique(),
+  borrowCount: integer("borrow_count").default(0).notNull(),
+  newBooksCount: integer("new_books_count").default(0).notNull(),
+  userSignups: integer("user_signups").default(0).notNull(),
 });
