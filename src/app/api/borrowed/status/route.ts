@@ -25,7 +25,7 @@ export async function PATCH(req: Request) {
   if (status === "BORROWED") {
     updateData.returnDate = null;
   } else {
-    updateData.returnDate = new Date().toISOString();
+    updateData.returnDate = new Date();
   }
 
   try {

@@ -30,8 +30,8 @@ export interface BorrowedBook {
   userId: string;
   bookId: string;
   borrowDate: Date;
-  dueDate: string;
-  returnDate: string | null;
+  dueDate: Date;
+  returnDate: Date | null;
   status: "BORROWED" | "RETURNED" | "LATE RETURNED";
   createAt: Date | null;
 }

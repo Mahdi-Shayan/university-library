@@ -68,8 +68,8 @@ export const borrowRecords = pgTable("borrow_records", {
   borrowDate: timestamp("borrow_date", { withTimezone: true })
     .defaultNow()
     .notNull(),
-  dueDate: date("due_date").notNull(),
-  returnDate: date("return_date"),
+  dueDate: timestamp("due_date", { withTimezone: true }).notNull(),
+  returnDate: timestamp("return_date", { withTimezone: true }),
   status: BORROW_STATUS_ENUM("status").default("LATE RETURNED").notNull(),
   createAt: timestamp("create_at", { withTimezone: true }).defaultNow(),
 });

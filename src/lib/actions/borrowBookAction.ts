@@ -25,7 +25,7 @@ export async function borrowBookAction(params: BorrowBookParams) {
       };
     }
 
-    const dueDate = dayjs().add(7, "day").toDate().toDateString();
+    const dueDate = dayjs().add(7, "day").toDate();
     const record = await db
       .insert(borrowRecords)
       .values({
