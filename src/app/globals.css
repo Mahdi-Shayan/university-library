@@ -8,25 +8,30 @@
   font-family: "light";
   src: url(/fonts/IBMPlexSans-Regular.ttf);
   font-weight: 400;
+  font-display: swap;
 }
 @font-face {
   font-family: "normal";
   src: url(/fonts/IBMPlexSans-Medium.ttf);
   font-weight: 500;
+  font-display: swap;
 }
 @font-face {
   font-family: "semibold";
   src: url(/fonts/IBMPlexSans-semibold.ttf);
   font-weight: 600;
+  font-display: swap;
 }
 @font-face {
   font-family: "bold";
   src: url(/fonts/IBMPlexSans-bold.ttf);
   font-weight: 700;
+  font-display: swap;
 }
 @font-face {
   font-family: "bebas";
   src: url(/fonts/BebasNeue-Regular.ttf);
+  font-display: swap;
 }
 
 :root {
