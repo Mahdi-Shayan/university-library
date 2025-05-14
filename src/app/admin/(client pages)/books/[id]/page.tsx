@@ -1,28 +1,39 @@
+"use client";
+
 import BookCover from "@/components/BookCover";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, Edit3 } from "lucide-react";
 import Link from "next/link";
 import { isValidUUID } from "@/lib/helper/checkIsValidId";
 import ShowError from "@/components/admin/ShowError";
-import { db } from "@/db/drizzle";
-import { books } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import dayjs from "dayjs";
 import IKVideoReview from "@/components/admin/IKVideoReview";
 import GoBackButton from "@/components/admin/GoBackButton";
+import { useParams } from "next/navigation";
+import { useBooks } from "@/hooks/useBooks";
+import Image from "next/image";
 
-async function BookDetails({ params }: { params: { id: string } }) {
-  const { id } = params;
+function BookDetails() {
+  const { id } = useParams() as { id: string };
 
   if (!isValidUUID(id)) {
-    return <ShowError title="Error 400" message="Invalid boook ID" />;
+    return <ShowError title="Error 400" message="Invalid book ID" />;
   }
 
-  const [book] = await db
-    .select()
-    .from(books)
-    .where(eq(books.id, id))
-    .limit(1);
+  const { data: book, isLoading } = useBooks(id);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-300px)]">
+        <Image
+          src="/icons/loading-circle.svg"
+          alt="Loading..."
+          width={80}
+          height={80}
+        />
+      </div>
+    );
+  }
 
   if (!book) {
     return (
@@ -86,7 +97,7 @@ async function BookDetails({ params }: { params: { id: string } }) {
         <div className="flex gap-10 max-lg:flex-col">
           <div className="flex-1 space-y-5">
             <h3 className="text-xl font-semibold">Summary</h3>
-            {book.summary.split("\n").map((line, ind) => (
+            {(book.summary as string).split("\n").map((line, ind) => (
               <p key={ind}>{line}</p>
             ))}
           </div>

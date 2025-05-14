@@ -16,7 +16,8 @@ interface Props {
 function BorrowedBookPreview({ books, borrow_records }: Props) {
   const borrowDate = dayjs.utc(borrow_records.borrowDate);
   const dueDate = dayjs.utc(borrow_records.dueDate);
-  const driff = dueDate.diff(borrowDate, "days");
+  const today = dayjs.utc().startOf("day");
+  const driff = dueDate.diff(today, "days");
 
   return (
     <div className="borrowed-book flex flex-col">

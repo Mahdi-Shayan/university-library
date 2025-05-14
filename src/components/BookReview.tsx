@@ -1,5 +1,5 @@
 import BookCover from "./BookCover";
-import { SampleBooks } from "../../types";
+import { SampleBooks, UserParams } from "../../types";
 import { db } from "@/db/drizzle";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -22,11 +22,11 @@ async function BookReview({
   userId,
   id,
 }: Props) {
-  const [user] = await db
+  const [user] = (await db
     .select()
     .from(users)
     .where(eq(users.id, userId))
-    .limit(1);
+    .limit(1)) as UserParams[];
 
   if (!user) return null;
 

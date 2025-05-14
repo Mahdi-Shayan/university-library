@@ -1,30 +1,32 @@
+"use client";
+
 import BookForm from "@/components/admin/BookForm";
-import { db } from "@/db/drizzle";
-import { books } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import ShowError from "@/components/admin/ShowError";
 import { isValidUUID } from "@/lib/helper/checkIsValidId";
 import GoBackButton from "@/components/admin/GoBackButton";
+import { useBooks } from "@/hooks/useBooks";
+import Image from "next/image";
+import { useParams } from "next/navigation";
 
-async function UpdateBook({ params }: { params: { id: string } }) {
-  const { id } = params;
+async function UpdateBook() {
+  const { id } = useParams() as { id: string };
 
   if (!isValidUUID(id)) {
     return <ShowError title="Error 400" message="Invalid boook ID" />;
   }
 
-  const [book] = await db
-    .select()
-    .from(books)
-    .where(eq(books.id, id))
-    .limit(1);
+  const { data: book, isLoading } = useBooks(id);
 
-  if (!book) {
+  if (isLoading) {
     return (
-      <ShowError
-        title="Error 404"
-        message="Sorry, there is no book here"
-      />
+      <div className="flex items-center justify-center h-[calc(100vh-300px)]">
+        <Image
+          src="/icons/loading-circle.svg"
+          alt="Loading..."
+          width={80}
+          height={80}
+        />
+      </div>
     );
   }
 

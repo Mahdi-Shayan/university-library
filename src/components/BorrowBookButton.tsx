@@ -35,8 +35,6 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
   );
   const { data: book, refetch: bookReftch } = useBooks(bookId);
 
-  console.log(borrow);
-
   const existingRecord = useMemo(
     () =>
       (borrow as BorrowedData[]).filter(
