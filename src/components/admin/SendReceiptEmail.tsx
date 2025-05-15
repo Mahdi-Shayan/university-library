@@ -31,6 +31,7 @@ function SendReceiptEmail({ body, status }: Props) {
         setSend(false);
       } catch (error) {
         toast.error("Somthing went wrong please try again later.");
+        console.error(error);
       }
     }
 

@@ -88,6 +88,7 @@ function BookForm({ type = "create", book }: Props) {
       }
     } catch (error) {
       toast.error("Server error please try again later.");
+      console.error(error);
     } finally {
       setSubmitimg(false);
     }

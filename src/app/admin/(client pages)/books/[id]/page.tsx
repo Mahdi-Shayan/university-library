@@ -16,11 +16,11 @@ import Image from "next/image";
 function BookDetails() {
   const { id } = useParams() as { id: string };
 
+  const { data: book, isLoading } = useBooks(id);
+
   if (!isValidUUID(id)) {
     return <ShowError title="Error 400" message="Invalid book ID" />;
   }
-
-  const { data: book, isLoading } = useBooks(id);
 
   if (isLoading) {
     return (

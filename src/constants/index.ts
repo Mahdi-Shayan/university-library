@@ -1,4 +1,4 @@
-import { AdminSideBarLinks, BorrowStatuses, SampleBooks, Sorts, UserRoles } from "../../types";
+import { AdminSideBarLinks, BorrowStatuses, Sorts, UserRoles } from "../../types";
 
 export const navigationLinks = [
   {

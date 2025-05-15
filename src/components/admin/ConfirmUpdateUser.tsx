@@ -12,11 +12,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { UserParams } from "../../../types";
 
 interface Props {
   type: "status" | "role";
@@ -36,8 +34,6 @@ function ConfirmUpdateUser({
   onConfirm,
 }: Props) {
   const [isConfirmed, setIsConfirmed] = useState(false);
-
-  const queryClient = useQueryClient();
 
   if (type === "status" && !status) {
     throw new Error("User status require");
@@ -89,7 +85,7 @@ function ConfirmUpdateUser({
     if (isConfirmed && status === "REJECTED") {
       deleteUser()
     }
-  }, [isConfirmed]);
+  }, [isConfirmed, onConfirm, role, status, userId]);
 
   return (
     <AlertDialog>

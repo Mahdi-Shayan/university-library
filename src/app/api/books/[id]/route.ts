@@ -6,10 +6,10 @@ import { SampleBooks } from "../../../../../types";
 
 export async function GET(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const id = (await params).id;
 
     if (!id)
       return new NextResponse(JSON.stringify("Book id missed!!!"), {
@@ -37,10 +37,10 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const id = (await params).id;
 
     if (!id) {
       return NextResponse.json(
@@ -90,10 +90,10 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const id = (await params).id;
     const body = (await req.json()) as SampleBooks;
 
     if (!id) {

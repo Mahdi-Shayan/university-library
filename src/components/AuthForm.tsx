@@ -70,6 +70,7 @@ function AuthForm<T extends FieldValues>({
       }
     } catch (error) {
       toast.error("Server Error", { description: "Try agian later." });
+      console.error(error);
     } finally {
       setIsloading(false);
     }

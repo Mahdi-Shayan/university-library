@@ -6,13 +6,13 @@ import {
 } from "@tanstack/react-query";
 import { Edit3, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { ForwardRefExoticComponent, ReactNode, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface Props {
   refetch: (
     options?: RefetchOptions
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<unknown, Error>>;
   id: string;
   dataType: "users" | "books";
 }

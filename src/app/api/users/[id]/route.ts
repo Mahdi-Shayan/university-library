@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const id = (await params).id;
 
     if (!id)
       return new NextResponse(JSON.stringify("User ID required!"), {
@@ -36,10 +36,10 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const id = (await params).id;
 
     if (!id) {
       return NextResponse.json(
@@ -94,9 +94,9 @@ interface UpdateTypes {
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = params.id;
+  const id = (await params).id;
   const body = await req.json();
 
   const { status, role }: UpdateTypes = body;

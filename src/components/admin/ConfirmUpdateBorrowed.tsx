@@ -61,7 +61,7 @@ function ConfirmUpdateBorrowed({
     if (isConfirmed && status !== "BORROWED") {
       updateStatus();
     }
-  }, [isConfirmed, userId, bookId, status]);
+  }, [isConfirmed, userId, bookId, status, onConfirm]);
 
   return (
     <AlertDialog>

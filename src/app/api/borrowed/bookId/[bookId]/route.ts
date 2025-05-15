@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  context: { params: { bookId: string } }
+  { params }: { params: Promise<{ bookId: string }> }
 ) {
   try {
-    const { bookId } = context.params;
+    const bookId = (await params).bookId;
 
     if (!bookId)
       return new NextResponse(JSON.stringify("User ID required!"), {

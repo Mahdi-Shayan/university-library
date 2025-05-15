@@ -34,8 +34,11 @@ async function authentication() {
     const { signature, expire, token } = data;
 
     return { signature, expire, token };
-  } catch (error: any) {
-    throw new Error(`Authentication request failed ${error.message}`);
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Authentication request failed ${error.message}`);
+    }
+    throw new Error("an unknown error accurrod");
   }
 }
 
@@ -69,7 +72,7 @@ function FileUploader({
       description: `Your ${type} could not be uploaded. Please try again.`,
     });
   }
-  function onSuccess(res: any): void {
+  function onSuccess(res: { filePath: string }): void {
     setFile(res);
 
     onChangeField(res.filePath);
@@ -138,8 +141,7 @@ function FileUploader({
           e.preventDefault();
 
           if (ikUploadRef.current) {
-            // @ts-ignore
-            ikUploadRef.current.click();
+            (ikUploadRef.current as { click: () => void }).click();
           }
         }}
       >

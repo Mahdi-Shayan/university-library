@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { borrowBookAction } from "@/lib/actions/borrowBookAction";
 import {
-  BorrowBookParams,
   BorrowedBook,
   SampleBooks,
   UserParams,

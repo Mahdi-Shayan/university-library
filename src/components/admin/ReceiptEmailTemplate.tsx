@@ -1,4 +1,4 @@
-import config from "@/lib/config";
+// import config from "@/lib/config";
 import { ReceiptParams } from "../../../types";
 import {
   Html,
@@ -8,13 +8,12 @@ import {
   Container,
   Section,
   Text,
-  Img,
   Hr,
 } from "@react-email/components";
 import dayjs from "dayjs";
 import * as React from "react";
 
-const baseUrl = config.env.apiEndpoint;
+// const baseUrl = config.env.apiEndpoint;
 
 function ReceiptEmailTemplate({ body }: ReceiptParams) {
   const main = {

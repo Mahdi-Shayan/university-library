@@ -15,7 +15,7 @@ interface Props {
   userId: string;
   refetch: (
     options?: RefetchOptions
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<unknown, Error>>;
   isLastChild: boolean;
 }
 
