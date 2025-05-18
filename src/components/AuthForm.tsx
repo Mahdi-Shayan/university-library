@@ -69,7 +69,7 @@ function AuthForm<T extends FieldValues>({
         });
       }
     } catch (error) {
-      toast.error("Server Error", { description: "Try agian later." });
+      toast.error("Server Error", { description: "Try again later." });
       console.error(error);
     } finally {
       setIsloading(false);
@@ -147,7 +147,15 @@ function AuthForm<T extends FieldValues>({
           </Button>
         </form>
       </Form>
-      <p className="text-sm font-normal text-center mt-5">
+      {isSignIn && (
+        <Link
+          href="/reset-password"
+          className="text-sm font-normal underline text-end"
+        >
+          Forgot your password?
+        </Link>
+      )}
+      <p className="text-sm font-normal text-center mt-2">
         {isSignIn ? "New to BookWise?" : "Already have an account?"}{" "}
         <Link
           href={isSignIn ? "/sign-up" : "sign-in"}

@@ -28,3 +28,21 @@ export const bookSchema = z.object({
   videoUrl: z.string().nonempty(),
   summary: z.string().trim().min(10),
 });
+
+export const GetResetCode = z.object({
+  email: z.string().email({ message: "Enter a valid email" }),
+});
+
+export const Otp = z.object({
+  verificationCode: z.string().length(6, { message: "Code must be 6 digits" }),
+});
+
+export const ResetPassword = z
+  .object({
+    newPassword: z.string().min(6, { message: "Password too short" }),
+    confirmPassword: z.string().min(6, { message: "Password too short" }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
