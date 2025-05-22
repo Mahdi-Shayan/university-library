@@ -82,9 +82,9 @@ export const dailyStats = pgTable("daily_stats", {
   userSignups: integer("user_signups").default(0).notNull(),
 });
 
-export const passwordResetCodes = pgTable("password_reset_codes", {
+export const verificationCode = pgTable("verification_code", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").notNull(),
+  email: text("email").notNull(),
   code: text("code").notNull(),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });

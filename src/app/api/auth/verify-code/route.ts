@@ -1,14 +1,14 @@
 import { db } from "@/db/drizzle";
-import { passwordResetCodes } from "@/db/schema";
+import { verificationCode } from "@/db/schema";
 import { and, eq, gt } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { verificationCode } = body;
+    const { verificationCode: verification } = body;
 
-    if (!verificationCode) {
+    if (!verification) {
       return NextResponse.json(
         { error: "Verification code is required" },
         { status: 400 }
@@ -17,11 +17,11 @@ export async function POST(req: Request) {
 
     const [code] = await db
       .select()
-      .from(passwordResetCodes)
+      .from(verificationCode)
       .where(
         and(
-          eq(passwordResetCodes.code, verificationCode),
-          gt(passwordResetCodes.expiresAt, new Date())
+          eq(verificationCode.code, verificationCode),
+          gt(verificationCode.expiresAt, new Date())
         )
       )
       .limit(1);

@@ -29,7 +29,7 @@ export const bookSchema = z.object({
   summary: z.string().trim().min(10),
 });
 
-export const GetResetCode = z.object({
+export const GetValidationCode = z.object({
   email: z.string().email({ message: "Enter a valid email" }),
 });
 

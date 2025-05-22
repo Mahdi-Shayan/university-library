@@ -2,7 +2,7 @@
 
 import { useForm, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GetResetCode, Otp, ResetPassword } from "@/lib/validations";
+import { GetValidationCode, ResetPassword } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,31 +12,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { Input } from "@/components/ui/input";
-import ResendCodeTimer from "./ResendCodeTimer";
 import { toast } from "sonner";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import OtpForm from "./OtpForm";
 
 interface ResetPasswordType {
   newPassword: string;
   confirmPassword: string;
 }
 
-interface GetCodeType {
-  email: string;
-}
-
 interface OtpType {
   verificationCode: string;
+}
+
+interface GetCodeType {
+  email: string;
 }
 
 interface Props {
@@ -50,17 +44,9 @@ function ResetPasswordForm({ onSubmit }: Props) {
   const emailForm = useForm<{
     email: string;
   }>({
-    resolver: zodResolver(GetResetCode),
+    resolver: zodResolver(GetValidationCode),
     defaultValues: {
       email: "",
-    },
-  });
-  const OtpForm = useForm<{
-    verificationCode: string;
-  }>({
-    resolver: zodResolver(Otp),
-    defaultValues: {
-      verificationCode: "",
     },
   });
   const ResetPasswordForm = useForm<{
@@ -112,7 +98,7 @@ function ResetPasswordForm({ onSubmit }: Props) {
       setIsLoading(true);
       const res = await onSubmit(
         data,
-        "/api/auth/reset-password/verify-code"
+        "/api/auth/verify-code"
       );
 
       if (res.success) {
@@ -152,7 +138,6 @@ function ResetPasswordForm({ onSubmit }: Props) {
         toast.success("Password reset successfully");
         emailForm.reset();
         ResetPasswordForm.reset();
-        OtpForm.reset();
         router.push("/sign-in");
       } else {
         toast.error(result.error ?? "An error occurred.");
@@ -222,55 +207,7 @@ function ResetPasswordForm({ onSubmit }: Props) {
 
       {/* OTP input */}
       {type === "UPDATE_PASSWORD" && !isCodeValid && (
-        <Form {...OtpForm}>
-          <form
-            onSubmit={OtpForm.handleSubmit(verifyCode)}
-            className="space-y-8"
-          >
-            <FormField
-              control={OtpForm.control}
-              name={"verificationCode" as Path<OtpType>}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputOTP maxLength={6} {...field}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                      </InputOTPGroup>
-                      <InputOTPSeparator />
-                      <InputOTPGroup>
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </FormControl>
-                  <ResendCodeTimer />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              className="form-btn"
-              type="submit"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Image
-                  src="/icons/loading-circle.svg"
-                  alt="loading"
-                  width={35}
-                  height={35}
-                />
-              ) : (
-                "Verify Code"
-              )}
-            </Button>
-          </form>
-        </Form>
+        <OtpForm onSubmit={verifyCode} isLoading={isLoading} />
       )}
 
       {/* New Password */}

@@ -21,10 +21,10 @@ export async function POST(req: Request) {
       .where(eq(users.email, email))
       .limit(1);
 
-    if (!user) {
+    if (user) {
       return NextResponse.json(
-        { error: "Please sign in with your email address" },
-        { status: 404 }
+        { error: "This email is already in use" },
+        { status: 409 }
       );
     }
 
@@ -40,21 +40,21 @@ export async function POST(req: Request) {
     if (resendCode === "true") {
       await db
         .delete(verificationCode)
-        .where(eq(verificationCode.email, user.email));
+        .where(eq(verificationCode.email, email));
 
       const newCode = randomInt(100000, 999999).toString();
       const newExpiresAt = new Date(Date.now() + 80 * 1000);
 
       await db.insert(verificationCode).values({
-        email: user.email,
+        email,
         code: newCode,
         expiresAt: newExpiresAt,
       });
 
-      await sendEmail(user.email, newCode);
+      await sendEmail(email, newCode);
 
       return NextResponse.json(
-        { success: true, message: "Reset password email sent" },
+        { success: true, message: "Verification code sent to your email" },
         { status: 200 }
       );
     }
@@ -62,21 +62,21 @@ export async function POST(req: Request) {
     // If the code is not being resent, create a new one
     await db
       .delete(verificationCode)
-      .where(eq(verificationCode.email, user.email));
+      .where(eq(verificationCode.email, email));
 
     const code = randomInt(100000, 999999).toString();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
     await db.insert(verificationCode).values({
-      email: user.email,
+      email,
       code,
       expiresAt,
     });
 
-    await sendEmail(user.email, code);
+    await sendEmail(email, code);
 
     return NextResponse.json(
-      { success: true, message: "Reset password email sent" },
+      { success: true, message: "Verification code sent to your email" },
       { status: 200 }
     );
   } catch (error) {
