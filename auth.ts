@@ -6,6 +6,7 @@ import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   session: {
     strategy: "jwt",
   },

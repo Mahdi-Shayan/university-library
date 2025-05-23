@@ -14,44 +14,53 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <Head>
-        {/* Preload کردن فونت‌ها */}
+        {/* Preload fonts */}
         <link
           rel="preload"
-          href="/fonts/IBMPlexSans-Regular.ttf"
+          href="/public/fonts/IBMPlexSans-Regular.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/IBMPlexSans-Medium.ttf"
+          href="/public/fonts/IBMPlexSans-Medium.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/IBMPlexSans-semibold.ttf"
+          href="/public/fonts/IBMPlexSans-SemiBold.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/IBMPlexSans-bold.ttf"
+          href="/public/fonts/IBMPlexSans-Bold.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/BebasNeue-Regular.ttf"
+          href="/public/fonts/BebasNeue-Regular.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link rel="preload" href="/images/pattern.webp" as="image" />
         <link rel="preload" href="/images/illustration.webp" as="image" />
+
+        {/* connections */}
+        <link rel="preconnect" href="https://ik.imagekit.io" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </Head>
       <body className="overflow-x-hidden">
         {children}
