@@ -58,7 +58,7 @@ function HomeRequestsList({
         </Button>
       </div>
       {type === "books" ? (
-        borrowedBooks.length > 0 ? (
+        borrowedBooks && borrowedBooks.length > 0 ? (
           <div className="rounded-2xl space-y-3 h-full overflow-y-auto overflow-x-hidden mt-5 pb-5">
             {borrowedBooks.map((borrowed) => {
               const [{ coverColor, coverUrl, title, author, genre, id }] =
@@ -126,7 +126,7 @@ function HomeRequestsList({
             type="small"
           />
         )
-      ) : getAccountRequests().length > 0 ? (
+      ) : getAccountRequests() && getAccountRequests().length > 0 ? (
         <div className="grid grid-cols-2 max-xl:!grid-cols-1 max-lg:!grid-cols-2 max-md:!grid-cols-1 auto-rows-max gap-4 mt-5 pb-15 h-full overflow-y-auto overflow-x-hidden">
           {getAccountRequests().map((user) => (
             <div

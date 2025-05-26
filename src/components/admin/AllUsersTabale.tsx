@@ -73,7 +73,7 @@ function AllUsersTable() {
   function getBorrowedLength(id: string): number {
     return (borrowed as BorrowedBook[]).filter(
       (b) => b.userId === id && b.status === "BORROWED"
-    ).length;
+    ).length || 0;
   }
 
   return (
