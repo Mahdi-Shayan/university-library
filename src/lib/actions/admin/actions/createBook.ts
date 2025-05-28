@@ -3,6 +3,7 @@
 import { db } from "@/db/drizzle";
 import { books } from "@/db/schema";
 import { SampleBooks } from "../../../../../types";
+import { revalidatePath } from "next/cache";
 
 export async function createBook(
   params: Omit<SampleBooks, "id" | "availableCopies">
@@ -23,6 +24,7 @@ export async function createBook(
   } catch (error) {
     console.log(error);
 
+    revalidatePath("/");
     return {
       success: false,
       message: "An error occurred while creating the book",

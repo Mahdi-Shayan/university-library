@@ -3,6 +3,7 @@ import { books, borrowRecords } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { SampleBooks } from "../../../../../types";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   req: Request,
@@ -73,6 +74,9 @@ export async function DELETE(
       );
     }
 
+    revalidatePath("/", "page");
+    revalidatePath("/library", "page");
+    
     return NextResponse.json(deleteBook, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
@@ -115,6 +119,8 @@ export async function PATCH(
       );
     }
 
+    revalidatePath("/");
+    revalidatePath("/library");
     return NextResponse.json(updateBook, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
