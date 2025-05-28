@@ -37,7 +37,7 @@ function BookCover({
     <>
       <div
         className={cn(
-          "relative transition-all duration-300",
+          "relative transition-all duration-300 mx-auto",
           variantStyles[variant],
           classname
         )}
@@ -53,8 +53,8 @@ function BookCover({
             alt="book cover"
             fill
             className="rounded-sm object-fill"
-            loading="lazy"
             lqip={{ active: true }}
+            priority={variant === "wide" ? true : undefined}
           />
         </div>
       </div>

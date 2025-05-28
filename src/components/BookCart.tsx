@@ -11,7 +11,7 @@ function BookCart({
 }: SampleBooks) {
   return (
     <>
-      <li>
+      <li className="flex justify-center">
         <Link href={`/books/${id}`} className='flex flex-col'>
           <BookCover coverColor={coverColor} coverImage={coverUrl} />
           <div className="mt-4">

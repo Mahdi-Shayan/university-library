@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
-import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "BookWise",
@@ -13,45 +12,45 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <Head>
+      <head>
         {/* Preload fonts */}
         <link
           rel="preload"
-          href="/public/fonts/IBMPlexSans-Regular.ttf"
+          href="/fonts/IBMPlexSans-Regular.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/public/fonts/IBMPlexSans-Medium.ttf"
+          href="/fonts/IBMPlexSans-Medium.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/public/fonts/IBMPlexSans-SemiBold.ttf"
+          href="/fonts/IBMPlexSans-SemiBold.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/public/fonts/IBMPlexSans-Bold.ttf"
+          href="/fonts/IBMPlexSans-Bold.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/public/fonts/BebasNeue-Regular.ttf"
+          href="/fonts/BebasNeue-Regular.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link rel="preload" href="/images/pattern.webp" as="image" />
-        <link rel="preload" href="/images/illustration.webp" as="image" />
+        <link rel="preload" href="/images/auth-illustration.webp" as="image" />
 
         {/* connections */}
         <link rel="preconnect" href="https://ik.imagekit.io" />
@@ -61,7 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-      </Head>
+      </head>
       <body className="overflow-x-hidden">
         {children}
         <Toaster

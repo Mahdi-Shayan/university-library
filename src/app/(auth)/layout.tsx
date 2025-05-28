@@ -4,10 +4,9 @@ import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
 
 async function Layout({ children }: { children: ReactNode }) {
+  const session = await auth();
 
-  const session = await auth()
-
-  if(session) redirect('/')
+  if (session) redirect("/");
 
   return (
     <>
@@ -20,6 +19,7 @@ async function Layout({ children }: { children: ReactNode }) {
                 alt="logo"
                 width={37}
                 height={37}
+                priority={true}
               />
               <h1 className="text-2xl font-semibold">BookWise</h1>
             </div>
@@ -28,10 +28,14 @@ async function Layout({ children }: { children: ReactNode }) {
         </section>
         <section className="auth-illustration">
           <Image
-            src="/images/auth-illustration.png"
+            src="/images/auth-illustration.webp"
             alt="auth illustration"
             fill
             className="size-full object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={true}
+            blurDataURL="/images/blur-auth-illustration.webp"
+            placeholder="blur"
           />
         </section>
       </main>
