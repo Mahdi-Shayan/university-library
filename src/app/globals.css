@@ -4,36 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@font-face {
-  font-family: "light";
-  src: url(/fonts/IBMPlexSans-Regular.ttf) format("truetype");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "normal";
-  src: url(/fonts/IBMPlexSans-Medium.ttf) format("truetype");
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: "semibold";
-  src: url(/fonts/IBMPlexSans-SemiBold.ttf) format("truetype");
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "bold";
-  src: url(/fonts/IBMPlexSans-Bold.ttf) format("truetype");
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "bebas";
-  src: url(/fonts/BebasNeue-Regular.ttf) format("truetype");
-  font-display: swap;
-}
-
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -172,11 +142,11 @@
   --color-dark-800: #1e2230;
   --color-gray-100: #cbd5e1;
   --breakpoint-xs: 480px;
-  --font-light: light, sans-serif;
-  --font-normal: normal, sans-serif;
-  --font-semibold: semibold, sans-serif;
-  --font-bold: bold, sans-serif;
-  --font-bebas-neue: bebas;
+  --font-light: var(--font-light), sans-serif;
+  --font-normal: var(--font-normal), sans-serif;
+  --font-semibold: var(--font-semibold), sans-serif;
+  --font-bold: var(--font-bold), sans-serif;
+  --font-bebas-neue: var(--font-bebas-neue);
   --background-image-pattern: url(/images/pattern.webp);
   --background-image-gradient-vertical: linear-gradient(
     180deg,

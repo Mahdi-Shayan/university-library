@@ -1,3 +1,4 @@
+import localFont from "next/font/local";
 import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
@@ -9,58 +10,37 @@ export const metadata: Metadata = {
     "BookWise is a book borrowing university library management solution.",
 };
 
+export const lightFont = localFont({
+  src: "../fonts/IBMPlexSans-Regular.ttf",
+  variable: "--font-light",
+});
+
+export const normalFont = localFont({
+  src: "../fonts/IBMPlexSans-Medium.ttf",
+  variable: "--font-normal",
+});
+
+export const semiboldFont = localFont({
+  src: "../fonts/IBMPlexSans-SemiBold.ttf",
+  variable: "--font-semibold",
+});
+
+export const boldFont = localFont({
+  src: "../fonts/IBMPlexSans-Bold.ttf",
+  variable: "--font-bold",
+});
+
+export const bebasFont = localFont({
+  src: "../fonts/BebasNeue-Regular.ttf",
+  variable: "--font-bebas-neue",
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        {/* Preload fonts */}
-        <link
-          rel="preload"
-          href="/fonts/IBMPlexSans-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/IBMPlexSans-Medium.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/IBMPlexSans-SemiBold.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/IBMPlexSans-Bold.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/BebasNeue-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link rel="preload" href="/images/pattern.webp" as="image" />
-        <link rel="preload" href="/images/auth-illustration.webp" as="image" />
-
-        {/* connections */}
-        <link rel="preconnect" href="https://ik.imagekit.io" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-      </head>
+    <html
+      lang="en"
+      className={`${lightFont.variable} ${normalFont.variable} ${semiboldFont.variable} ${boldFont.variable} ${bebasFont.variable}`}
+    >
       <body className="overflow-x-hidden">
         {children}
         <Toaster
