@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { getInitials } from "@/utils";
 import dayjs from "dayjs";
 import BorrowedStatusSelector from "./BorrowedStatusSelector";
-import SendReceiptEmail from "./SendReceiptEmail";
+import SendReceiptEmail from "../emailTemplate/SendReceiptEmail";
 import ShowError from "./ShowError";
 import EmptyList from "./EmptyList";
 
@@ -150,15 +150,12 @@ function AllBorrowRecordsTable() {
                 <TableCell>{getDate(borrow_records.dueDate)}</TableCell>
                 <TableCell>
                   <SendReceiptEmail
-                    body={{
-                      author: books.author,
-                      title: books.title,
-                      genre: books.genre,
-                      borrowDate: borrow_records.borrowDate,
-                      dueDate: borrow_records.dueDate,
-                      email: users.email,
-                    }}
+                    type="borrowed"
+                    email={users.email}
+                    dueDate={borrow_records.dueDate}
+                    borrowDate={borrow_records.borrowDate}
                     status={borrow_records.status}
+                    userName={users.fullName}
                   />
                 </TableCell>
               </TableRow>

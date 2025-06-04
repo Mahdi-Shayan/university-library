@@ -183,6 +183,10 @@
   .hide-scrollbar::-webkit-scrollbar-thumb:hover {
     background: transparent;
   }
+
+  hr {
+    @apply border-gray-600;
+  }
 }
 
 @layer components {
@@ -649,5 +653,18 @@
 
   .library-title {
     @apply mt-2 text-3xl font-semibold text-white xs:text-5xl;
+  }
+
+  /* Receipt */
+  .receipt-container {
+    @apply absolute flex flex-col gap-6 p-10 bg-[#232839] text-light-100 z-50 w-max rounded-lg;
+  }
+
+  .book-details_item {
+    @apply flex flex-col gap-2 text-[12px] p-[10px] border border-gray-500 rounded-[6px];
+  }
+
+  .span {
+    @apply text-white font-normal text-sm;
   }
 }

@@ -25,7 +25,7 @@ export async function borrowBookAction(params: BorrowBookParams) {
       };
     }
 
-    const dueDate = dayjs().add(7, "day").toDate();
+    const dueDate = dayjs().add(15, "day").toDate();
     const record = await db
       .insert(borrowRecords)
       .values({
@@ -50,5 +50,46 @@ export async function borrowBookAction(params: BorrowBookParams) {
       success: false,
       message: error,
     };
+  }
+}
+
+type StatusType = "BORROWED" | "RETURNED" | "LATE RETURNED";
+
+export async function updateBorrowedStatus(
+  bookId: string,
+  status: StatusType
+) {
+  try {
+    const record = await db
+      .select()
+      .from(borrowRecords)
+      .where(eq(borrowRecords.bookId, bookId))
+      .limit(1);
+
+    if (!record.length) {
+      return {
+        success: false,
+        message: "Borrow record not found",
+      };
+    }
+
+    if (status === "RETURNED") {
+      await db
+        .update(borrowRecords)
+        .set({ status, returnDate: new Date() })
+        .where(eq(borrowRecords.id, record[0].id));
+    } else {
+      await db
+        .update(borrowRecords)
+        .set({ status })
+        .where(eq(borrowRecords.id, record[0].id));
+    }
+
+    return {
+      success: true,
+      message: "Book returned successfully",
+    };
+  } catch (error) {
+    console.error(error);
   }
 }

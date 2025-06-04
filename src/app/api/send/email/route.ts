@@ -1,4 +1,4 @@
-import ReceiptEmailTemplate from "@/components/admin/ReceiptEmailTemplate";
+import EmailTemplate from "@/components/emailTemplate/EmailTemplate";
 import config from "@/lib/config";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
@@ -8,11 +8,12 @@ const resend = new Resend(config.env.resend.apiKey);
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { genre, title, dueDate, author, borrowDate, email } = body;
+    const { type, userName, dueDate, borrowDate, email } = body;
 
-    if (!genre || !title || !dueDate || !author || !borrowDate || !email) {
+    if (!dueDate || !borrowDate || !email || !userName) {
       return NextResponse.json({
-        error: 'No data provided "genre title dueDate author borrowDate"',
+        error:
+          'No data provided "dueDate, borrowDate, email and userName"',
       });
     }
 
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
       from: "university library <onboarding@resend.dev>",
       to: [email],
       subject: "Book Receipt",
-      react: ReceiptEmailTemplate({ body }),
+      react: EmailTemplate({ type, userName, dueDate, borrowDate }),
     });
 
     if (error) {

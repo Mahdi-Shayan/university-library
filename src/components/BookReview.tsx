@@ -49,7 +49,7 @@ async function BookReview({
       <div className="relative flex-1 flex justify-center">
         <div className="relative">
           <BookCover
-            classname="z-10"
+            className="z-10"
             variant="wide"
             coverColor={`${coverColor}`}
             coverImage={`${coverUrl}`}

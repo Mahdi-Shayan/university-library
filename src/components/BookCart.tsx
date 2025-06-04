@@ -13,7 +13,7 @@ function BookCart({
     <>
       <li className="flex justify-center">
         <Link href={`/books/${id}`} className='flex flex-col'>
-          <BookCover coverColor={coverColor} coverImage={coverUrl} />
+          <BookCover className="mx-auto" coverColor={coverColor} coverImage={coverUrl} />
           <div className="mt-4">
             <p className="book-title text-lg">{title}</p>
             <p className="book-genre font-light">{genre}</p>

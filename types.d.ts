@@ -89,6 +89,12 @@ export interface BorrowBookWithDetails {
 
 export interface ReceiptParams {
   body: Pick<SampleBooks, "author" | "genre" | "title"> &
-    Pick<BorrowedBook, "borrowDate" | "dueDate"> &
-    Pick<UserParams, "email">;
+    Pick<BorrowedBook, "borrowDate" | "dueDate">;
 }
+
+type EmailType =
+  | "welcome"
+  | "reminder"
+  | "account-approval"
+  | "borrowed"
+  | "thanks";

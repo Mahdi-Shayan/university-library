@@ -24,22 +24,22 @@ interface Props {
   variant?: VariantStyles;
   coverColor: string;
   coverImage: string;
-  classname?: string;
+  className?: string;
 }
 
 function BookCover({
   variant = "regular",
   coverColor,
-  classname,
+  className,
   coverImage,
 }: Props) {
   return (
     <>
       <div
         className={cn(
-          "relative transition-all duration-300 mx-auto",
+          "relative transition-all duration-300",
           variantStyles[variant],
-          classname
+          className
         )}
       >
         <BookCoverSvg coverColor={coverColor} />
