@@ -12,8 +12,13 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email } = body;
-    const { searchParams } = new URL(req.url);
-    const resendCode = searchParams.get("resend");
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 }
+      );
+    }
 
     const [user] = await db
       .select()
@@ -23,7 +28,7 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Please sign in with your email address" },
+        { error: "Please sign up with your email address" },
         { status: 404 }
       );
     }
@@ -34,29 +39,6 @@ export async function POST(req: Request) {
 
     if (!success) {
       return NextResponse.redirect(`${config.env.apiEndpoint}/too-fast`);
-    }
-
-    // If the code is being resent, delete the old code then create a new one
-    if (resendCode === "true") {
-      await db
-        .delete(verificationCode)
-        .where(eq(verificationCode.email, user.email));
-
-      const newCode = randomInt(100000, 999999).toString();
-      const newExpiresAt = new Date(Date.now() + 80 * 1000);
-
-      await db.insert(verificationCode).values({
-        email: user.email,
-        code: newCode,
-        expiresAt: newExpiresAt,
-      });
-
-      await sendEmail(user.email, newCode);
-
-      return NextResponse.json(
-        { success: true, message: "Reset password email sent" },
-        { status: 200 }
-      );
     }
 
     // If the code is not being resent, create a new one

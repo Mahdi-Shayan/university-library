@@ -30,6 +30,7 @@ import Image from "next/image";
 import OtpForm from "./OtpForm";
 import { handleVerificationCode } from "@/lib/handleVerificationCode";
 import { GetValidationCode } from "@/lib/validations";
+import { useEmailContext } from "@/lib/contexts/emailContext";
 
 interface Props<T extends FieldValues> {
   type: "SIGN_IN" | "SIGN_UP";
@@ -53,6 +54,7 @@ function AuthForm<T extends FieldValues>({
   const [isloading, setIsloading] = useState(false);
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
   const [isCodeVerified, setIsCodeVerified] = useState<boolean>(false);
+  const { setEmail } = useEmailContext();
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -93,7 +95,7 @@ function AuthForm<T extends FieldValues>({
   };
 
   // sending verification code
-  const sendCode = async (data: unknown) => {
+  const sendCode = async (data: {email: string}) => {
     try {
       setIsloading(true);
       const res = await handleVerificationCode(
@@ -103,6 +105,9 @@ function AuthForm<T extends FieldValues>({
 
       if (res.success) {
         setIsCodeSent(true);
+        setEmail(data.email);
+        localStorage.setItem('email', JSON.stringify(data.email))
+        toast.success("Verification code sent successfully");
       } else {
         toast.error(res.error ?? "An error occurred.");
       }

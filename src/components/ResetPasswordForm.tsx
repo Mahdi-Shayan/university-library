@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import OtpForm from "./OtpForm";
+import { useEmailContext } from "@/lib/contexts/emailContext";
 
 interface ResetPasswordType {
   newPassword: string;
@@ -41,6 +42,8 @@ interface Props {
 }
 
 function ResetPasswordForm({ onSubmit }: Props) {
+  const { setEmail } = useEmailContext();
+
   const emailForm = useForm<{
     email: string;
   }>({
@@ -80,6 +83,8 @@ function ResetPasswordForm({ onSubmit }: Props) {
         toast.success("Password reset code sent", {
           description: "Please check your email for the code.",
         });
+        setEmail(data.email);
+        localStorage.setItem("email", JSON.stringify(data.email));
         setType("UPDATE_PASSWORD");
       } else {
         toast.error(res.error ?? "An error occurred.");
@@ -96,10 +101,7 @@ function ResetPasswordForm({ onSubmit }: Props) {
   async function verifyCode(data: OtpType) {
     try {
       setIsLoading(true);
-      const res = await onSubmit(
-        data,
-        "/api/auth/verify-code"
-      );
+      const res = await onSubmit(data, "/api/auth/verify-code");
 
       if (res.success) {
         setIsCodeValid(true);

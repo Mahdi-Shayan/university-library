@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ReactNode } from "react";
 import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
+import { EmailContextProvider } from "@/lib/contexts/emailContext";
 
 async function Layout({ children }: { children: ReactNode }) {
   const session = await auth();
@@ -9,7 +10,7 @@ async function Layout({ children }: { children: ReactNode }) {
   if (session) redirect("/");
 
   return (
-    <>
+    <EmailContextProvider>
       <main className="auth-container">
         <section className="auth-form">
           <div className="auth-box">
@@ -39,7 +40,7 @@ async function Layout({ children }: { children: ReactNode }) {
           />
         </section>
       </main>
-    </>
+    </EmailContextProvider>
   );
 }
 

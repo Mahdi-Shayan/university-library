@@ -1,5 +1,6 @@
 "use client";
 
+import { useEmailContext } from "@/lib/contexts/emailContext";
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { toast } from "sonner";
@@ -9,6 +10,7 @@ const TIMER_KEY = "otp-expiry-time";
 function ResendCodeTimer() {
   const [resendActive, setResendActive] = useState(false);
   const [expiryTime, setExpiryTime] = useState<number | null>(null);
+  const { email, setEmail } = useEmailContext();
 
   useEffect(() => {
     const savedExpiry = localStorage.getItem(TIMER_KEY);
@@ -22,23 +24,29 @@ function ResendCodeTimer() {
   }, []);
 
   const handleResend = async () => {
-    const res = await fetch("/api/auth/reset-password?resend=true", {
-      body: JSON.stringify(""),
-      method: "POST",
-    });
+    try {
+      const res = await fetch("/api/auth/verify-code/resend", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      toast.error(data.error || "Failed to resend code");
-      return;
+      if (!res.ok) {
+        toast.error(data.error || "Failed to resend code");
+        return;
+      }
+
+      const newExpiry = Date.now() + 1000 * 90;
+      localStorage.setItem(TIMER_KEY, newExpiry.toString());
+      setExpiryTime(newExpiry);
+      setResendActive(false);
+      toast.success("Reset code resent successfully");
+      setEmail("");
+      localStorage.removeItem("email");
+    } catch (error) {
+      console.error("Error resending code:", error);
     }
-
-    const newExpiry = Date.now() + 1000 * 90;
-    localStorage.setItem(TIMER_KEY, newExpiry.toString());
-    setExpiryTime(newExpiry);
-    setResendActive(false);
-    toast.success("Reset code resent successfully");
   };
 
   if (!expiryTime) return null;
