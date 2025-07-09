@@ -10,27 +10,27 @@ export const metadata: Metadata = {
     "BookWise is a book borrowing university library management solution.",
 };
 
-export const lightFont = localFont({
+const lightFont = localFont({
   src: "../fonts/IBMPlexSans-Regular.ttf",
   variable: "--font-light",
 });
 
-export const normalFont = localFont({
+const normalFont = localFont({
   src: "../fonts/IBMPlexSans-Medium.ttf",
   variable: "--font-normal",
 });
 
-export const semiboldFont = localFont({
+const semiboldFont = localFont({
   src: "../fonts/IBMPlexSans-SemiBold.ttf",
   variable: "--font-semibold",
 });
 
-export const boldFont = localFont({
+const boldFont = localFont({
   src: "../fonts/IBMPlexSans-Bold.ttf",
   variable: "--font-bold",
 });
 
-export const bebasFont = localFont({
+const bebasFont = localFont({
   src: "../fonts/BebasNeue-Regular.ttf",
   variable: "--font-bebas-neue",
 });

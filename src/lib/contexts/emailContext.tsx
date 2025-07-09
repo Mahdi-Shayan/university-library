@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const EmailContext = createContext<
   { email: string; setEmail: (email: string) => void } | undefined
@@ -11,9 +17,14 @@ export function EmailContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [email, setEmail] = useState<string>(
-    JSON.parse(localStorage.getItem("email") as string) || ""
-  );
+  const [email, setEmail] = useState<string>("");
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
 
   return (
     <EmailContext.Provider value={{ email, setEmail }}>

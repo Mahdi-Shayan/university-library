@@ -1,4 +1,5 @@
-export async function handleVerificationCode(
+export async function 
+handleVerificationCode(
   data: unknown,
   endPoint: string
 ) {

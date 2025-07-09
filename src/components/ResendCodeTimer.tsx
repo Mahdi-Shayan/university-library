@@ -1,6 +1,7 @@
 "use client";
 
 import { useEmailContext } from "@/lib/contexts/emailContext";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { toast } from "sonner";
@@ -11,6 +12,7 @@ function ResendCodeTimer() {
   const [resendActive, setResendActive] = useState(false);
   const [expiryTime, setExpiryTime] = useState<number | null>(null);
   const { email, setEmail } = useEmailContext();
+  const [isLoading, setIsLoding] = useState<boolean>(false);
 
   useEffect(() => {
     const savedExpiry = localStorage.getItem(TIMER_KEY);
@@ -25,6 +27,7 @@ function ResendCodeTimer() {
 
   const handleResend = async () => {
     try {
+      setIsLoding(true);
       const res = await fetch("/api/auth/verify-code/resend", {
         method: "POST",
         body: JSON.stringify({ email }),
@@ -46,13 +49,15 @@ function ResendCodeTimer() {
       localStorage.removeItem("email");
     } catch (error) {
       console.error("Error resending code:", error);
+    } finally {
+      setIsLoding(false);
     }
   };
 
   if (!expiryTime) return null;
 
   return (
-    <div className="space-x-2 text-center mt-5">
+    <div className="space-x-2 text-center mt-5 flex justify-center">
       <Countdown
         key={expiryTime}
         date={expiryTime}
@@ -71,7 +76,16 @@ function ResendCodeTimer() {
         disabled={!resendActive}
         className="disabled:opacity-50 disabled:cursor-no-drop cursor-pointer underline text-light-100"
       >
-        {resendActive && "Resend Code"}
+        {isLoading ? (
+          <Image
+            src="/icons/loading-circle.svg"
+            alt="loading"
+            width={25}
+            height={25}
+          />
+        ) : (
+          resendActive && "Resend Code"
+        )}
       </button>
     </div>
   );

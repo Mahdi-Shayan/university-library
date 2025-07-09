@@ -10,9 +10,7 @@ type SendResetPasswordEmailProps = {
   code: string;
 };
 
-export function SendResetPasswordEmail({
-  code,
-}: SendResetPasswordEmailProps) {
+function SendResetPasswordEmail({ code }: SendResetPasswordEmailProps) {
   return (
     <Html>
       <Container

@@ -1,5 +1,12 @@
 const config = {
   env: {
+    smtp: {
+      host: process.env.SMTP_HOST!,
+      port: parseInt(process.env.SMTP_PORT!, 10),
+      secure: process.env.SMTP_SECURE === "true",
+      user: process.env.SMTP_USER!,
+      pass: process.env.SMTP_PASS!,
+    },
     apiEndpoint: process.env.NEXT_PUBLIC_API_ENDPOINT!,
     imageKit: {
       publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,

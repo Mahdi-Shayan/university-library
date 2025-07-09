@@ -5,7 +5,7 @@ import { books } from "@/db/schema";
 import { SampleBooks } from "../../../types";
 import { auth } from "../../../auth";
 
-export const revalidate = 60 * 10; // 10 min
+export const revalidate = 600; // 10 min
 
 async function Home() {
   const latestBooks = (await db
