@@ -22,7 +22,7 @@ export function EmailContextProvider({
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
     if (savedEmail) {
-      setEmail(savedEmail);
+      setEmail(JSON.parse(savedEmail));
     }
   }, []);
 

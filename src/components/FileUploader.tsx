@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { Skeleton } from "./ui/skeleton";
 
 const {
   env: {
@@ -169,7 +170,7 @@ function FileUploader({
           </div>
         </div>
       )}
-      {file && file.filePath && (
+      {file && file.filePath ? (
         <div className="relative h-[300px] overflow-hidden">
           {type === "image" ? (
             <IKImage
@@ -186,6 +187,15 @@ function FileUploader({
             />
           ) : null}
         </div>
+      ) : (
+        progress > 0 && (
+          <div className="relative h-[250px] w-full">
+            <p className="absolute top-1/2 right-1/2 translate-x-1/2 text-black z-10">
+              Please wait...
+            </p>
+            <Skeleton className="size-full" />
+          </div>
+        )
       )}
     </ImageKitProvider>
   );

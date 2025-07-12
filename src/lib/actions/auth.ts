@@ -18,7 +18,7 @@ export async function signInWithCredentials(
   const ip = (await headers()).get("x-forwarded-for") || "217.218.48.228";
   const { success } = await ratelimit.limit(ip);
 
-  if(!success) return redirect("/too-fast")
+  if (!success) return redirect("/too-fast");
 
   try {
     const result = await signIn("credentials", {
@@ -45,7 +45,7 @@ export async function signUp(params: AuthCredentials) {
   const ip = (await headers()).get("x-forwarded-for") || "217.218.48.228";
   const { success } = await ratelimit.limit(ip);
 
-  if(!success) return redirect("/too-fast")
+  if (!success) return redirect("/too-fast");
 
   const existingUser = await db
     .select()
@@ -53,8 +53,18 @@ export async function signUp(params: AuthCredentials) {
     .where(eq(users.email, email))
     .limit(1);
 
+  const existingUniversityId = await db
+    .select()
+    .from(users)
+    .where(eq(users.universityId, universityId))
+    .limit(1);
+
   if (existingUser.length > 0) {
     return { success: false, error: "User already exists" };
+  }
+
+  if (existingUniversityId.length > 0) {
+    return { success: false, error: "University ID already exists" };
   }
 
   const hashPassword = await hash(password, 10);
@@ -66,6 +76,8 @@ export async function signUp(params: AuthCredentials) {
       universityId,
       password: hashPassword,
       universityCard,
+      role: "ADMIN",
+      status: "APPROVED",
     });
 
     await signInWithCredentials(params);
