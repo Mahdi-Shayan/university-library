@@ -618,15 +618,15 @@
   }
 
   .auth-form {
-    @apply my-auto flex h-full min-h-screen flex-1 items-center bg-pattern bg-cover bg-top bg-dark-100 px-5 py-10;
+    @apply my-auto flex h-full items-center min-h-screen flex-1 bg-pattern bg-cover bg-top bg-dark-100 sm:px-5 py-10;
   }
 
   .auth-box {
-    @apply bg-gradient-vertical mx-auto flex max-w-xl flex-col gap-6 rounded-lg p-10;
+    @apply bg-gradient-vertical mx-auto flex h-max sm:min-w-110 w-[90%] max-w-xl flex-col gap-6 rounded-lg p-10;
   }
 
   .auth-illustration {
-    @apply sticky h-40 w-full sm:top-0 md:h-screen md:flex-1 !bg-no-repeat bg-auth bg-cover bg-center;
+    @apply sticky h-40 w-full md:h-screen md:flex-1 !bg-no-repeat bg-auth bg-cover bg-center;
   }
 
   /* Root */
