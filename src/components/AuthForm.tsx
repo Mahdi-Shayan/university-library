@@ -4,6 +4,7 @@ import {
   DefaultValues,
   FieldValues,
   Path,
+  PathValue,
   SubmitHandler,
   useForm,
   UseFormReturn,
@@ -25,7 +26,7 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import FileUploader from "./FileUploader";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import OtpForm from "./OtpForm";
 import { handleVerificationCode } from "@/lib/handleVerificationCode";
@@ -54,7 +55,7 @@ function AuthForm<T extends FieldValues>({
   const [isloading, setIsloading] = useState(false);
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
   const [isCodeVerified, setIsCodeVerified] = useState<boolean>(false);
-  const { setEmail } = useEmailContext();
+  const { setEmail, email } = useEmailContext();
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -68,6 +69,12 @@ function AuthForm<T extends FieldValues>({
     },
   });
 
+  useEffect(() => {
+    if (type === "SIGN_UP" && email) {
+      form.setValue("email" as Path<T>, email as PathValue<T, Path<T>>);
+    }
+  }, [defaultValues, email, form, type]);
+
   const handleSubmit: SubmitHandler<T> = async (data) => {
     try {
       setIsloading(true);
@@ -79,12 +86,15 @@ function AuthForm<T extends FieldValues>({
             ? "You have successfully signed in."
             : "You have successfully signed up.",
         });
+        setEmail("");
 
         router.push("/");
       } else {
         toast.error(`Error ${isSignIn ? "signing in" : "signing up"}`, {
           description: result.error ?? "An error occurred.",
         });
+
+        console.log(result);
       }
     } catch (error) {
       toast.error("Server Error", { description: "Try again later." });
@@ -95,7 +105,12 @@ function AuthForm<T extends FieldValues>({
   };
 
   // sending verification code
-  const sendCode = async (data: {email: string}) => {
+  const sendCode = async (data: { email: string }) => {
+    const savedExpiry = localStorage.getItem("otp-expiry-time");
+    if (savedExpiry && parseInt(savedExpiry) > Date.now()) {
+      setIsCodeSent(true);
+      return;
+    }
     try {
       setIsloading(true);
       const res = await handleVerificationCode(
@@ -106,7 +121,7 @@ function AuthForm<T extends FieldValues>({
       if (res.success) {
         setIsCodeSent(true);
         setEmail(data.email);
-        localStorage.setItem('email', JSON.stringify(data.email))
+        localStorage.setItem("email", JSON.stringify(data.email));
         toast.success("Verification code sent successfully");
       } else {
         toast.error(res.error ?? "An error occurred.");
@@ -130,7 +145,9 @@ function AuthForm<T extends FieldValues>({
       if (res.success) {
         setIsCodeVerified(true);
       } else {
-        toast.error(res.error ?? "An error occurred.");
+        toast.error(
+          res.error ? "invalid verification code" : "An error occurred."
+        );
       }
     } catch (error) {
       toast.error("Server Error", { description: "Try again later." });
@@ -181,6 +198,9 @@ function AuthForm<T extends FieldValues>({
                       ) : (
                         <Input
                           required
+                          readOnly={
+                            type === "SIGN_UP" && field.name === "email"
+                          }
                           type={
                             FIELD_TYPES[
                               field.name as keyof typeof FIELD_TYPES

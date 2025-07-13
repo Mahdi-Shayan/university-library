@@ -148,6 +148,7 @@
   --font-bold: var(--font-bold), sans-serif;
   --font-bebas-neue: var(--font-bebas-neue);
   --background-image-pattern: url(/images/pattern.webp);
+  --background-image-auth: url(/images/auth-illustration.webp);
   --background-image-gradient-vertical: linear-gradient(
     180deg,
     #12141d 0%,
@@ -625,7 +626,7 @@
   }
 
   .auth-illustration {
-    @apply sticky h-40 w-full sm:top-0 md:h-screen md:flex-1;
+    @apply sticky h-40 w-full sm:top-0 md:h-screen md:flex-1 !bg-no-repeat bg-auth bg-cover bg-center;
   }
 
   /* Root */

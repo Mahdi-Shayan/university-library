@@ -27,18 +27,9 @@ async function Layout({ children }: { children: ReactNode }) {
             <div>{children}</div>
           </div>
         </section>
-        <section className="auth-illustration">
-          <Image
-            src="/images/auth-illustration.webp"
-            alt="auth illustration"
-            fill
-            className="size-full object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority={true}
-            blurDataURL="/images/blur-auth-illustration.webp"
-            placeholder="blur"
-          />
-        </section>
+        <section
+          className="auth-illustration"
+        />
       </main>
     </EmailContextProvider>
   );

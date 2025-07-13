@@ -67,6 +67,9 @@ export default function Header({ session }: { session: Session }) {
           className={navClasses}
           style={{ transition: "translate 0.4s, border-radius 0.4s" }}
         >
+          <li className={linkClasses("/admin")}>
+            <Link href="/admin">Admin</Link>
+          </li>
           <li className={linkClasses("/library")}>
             <Link href="/library">library</Link>
           </li>
