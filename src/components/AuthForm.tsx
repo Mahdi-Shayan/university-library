@@ -159,12 +159,12 @@ function AuthForm<T extends FieldValues>({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold ">
+      <h1 className="text-2xl max-md:text-xl font-semibold ">
         {isSignIn
           ? "Welcome Back to the BookWise"
           : "Create Your Library Account"}
       </h1>
-      <p className="font-light text-light-500">
+      <p className="font-light text-light-500 max-md:text-sm">
         {isSignIn
           ? "Access the vast collection of resources, and stay updated"
           : "Please complete all fields and upload a valid university ID to gain access to the library"}
