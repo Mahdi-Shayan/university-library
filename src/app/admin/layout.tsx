@@ -12,15 +12,15 @@ async function Layout({ children }: { children: ReactNode }) {
 
   if (!session?.user?.id) redirect("sign-in");
 
-  const res: { isAdmin: "USER" | "ADMIN" | null }[] = await db
-    .select({ isAdmin: users.role })
-    .from(users)
-    .where(eq(users.id, session.user.id))
-    .limit(1);
+  // const res: { isAdmin: "USER" | "ADMIN" | null }[] = await db
+  //   .select({ isAdmin: users.role })
+  //   .from(users)
+  //   .where(eq(users.id, session.user.id))
+  //   .limit(1);
 
-  const isAdmin: boolean = res[0].isAdmin === "ADMIN";
+  // const isAdmin: boolean = res[0].isAdmin === "ADMIN";
 
-  if (!isAdmin) redirect("/");
+  // if (!isAdmin) redirect("/");
 
   return (
     <>

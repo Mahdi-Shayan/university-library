@@ -21,8 +21,9 @@ async function Layout({ children }: { children: ReactNode }) {
                 width={37}
                 height={37}
                 priority={true}
+                className="max-md:size-7"
               />
-              <h1 className="text-2xl font-semibold">BookWise</h1>
+              <h1 className="md:text-2xl text-xl font-semibold">BookWise</h1>
             </div>
             <div>{children}</div>
           </div>
