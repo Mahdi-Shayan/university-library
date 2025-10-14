@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { SampleBooks, UserParams } from "../../types";
 import Image from "next/image";
 import BorrowBookButton from "./BorrowBookButton";
@@ -18,22 +18,18 @@ function BookDetails({
   details: Details;
   user: UserParams;
 }) {
-  const [book, setBook] = useState<SampleBooks>();
-  const { author, genre, title, id, rating, description } = details;
-  const [updated, setUpdated] = useState(false);
+  const {
+    author,
+    genre,
+    title,
+    id,
+    rating,
+    description,
+    availableCopies,
+    totalCopies,
+  } = useMemo(() => details, [details]);
 
   const queryCalient = new QueryClient();
-
-  useEffect(() => {
-    const fetchBook = async () => {
-      const res = await fetch(`/api/books/${id}`, { cache: "no-store" });
-      const data = await res.json();
-
-      setBook(data);
-    };
-
-    fetchBook();
-  }, [id, updated]);
 
   return (
     <div className="flex flex-col flex-1 gap-5">
@@ -59,20 +55,16 @@ function BookDetails({
       <div className="book-copies">
         <p>
           Total books:
-          <span>{book ? book.totalCopies : "..."}</span>
+          <span>{totalCopies}</span>
         </p>
         <p>
           Available books:
-          <span>{book ? book.availableCopies : "..."}</span>
+          <span>{availableCopies}</span>
         </p>
       </div>
       <p className="book-description">{description}</p>
       <QueryClientProvider client={queryCalient}>
-        <BorrowBookButton
-          bookId={id}
-          user={user}
-          setUpdated={setUpdated}
-        />
+        <BorrowBookButton bookId={id} user={user} />
       </QueryClientProvider>
     </div>
   );

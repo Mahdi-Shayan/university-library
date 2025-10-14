@@ -21,8 +21,9 @@ import FileUploader from "../FileUploader";
 import ColorPicker from "./ColorPicker";
 import { createBook } from "@/lib/actions/admin/actions/createBook";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
+import { clientRevalidateTag } from "@/lib/actions/clientRevalidateTags";
 
 interface Props {
   type?: "create" | "update";
@@ -52,47 +53,51 @@ function BookForm({ type = "create", book }: Props) {
         : { ...book },
   });
 
-  const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-    try {
-      setSubmitimg(true);
-      if (type === "create") {
-        const result = await createBook(values);
+  const onSubmit = useCallback(
+    async (values: z.infer<typeof bookSchema>) => {
+      try {
+        setSubmitimg(true);
+        if (type === "create") {
+          const result = await createBook(values);
 
-        if (result.success) {
-          toast.success("Book created successfully");
+          if (result.success) {
+            toast.success("Book created successfully");
 
-          router.push(`/admin/books/${result.data.id}`);
+            router.push(`/admin/books/${result.data.id}`);
+          } else {
+            toast.error(`${result.message}`);
+          }
         } else {
-          toast.error(`${result.message}`);
+          if (!book || !book.id) {
+            toast.error("No book selected to update.");
+            return;
+          }
+
+          const res = await fetch(`/api/books/${book.id}`, {
+            method: "PATCH",
+            body: JSON.stringify(values),
+            headers: { "Content-Type": "application/json" },
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            toast.error(data?.error || "Failed to update book.");
+            return;
+          }
+
+          clientRevalidateTag(`book-${book.id}`);
+          toast.success("Book updated successfully");
         }
-      } else {
-        if (!book || !book.id) {
-          toast.error("No book selected to update.");
-          return;
-        }
-
-        const res = await fetch(`/api/books/${book.id}`, {
-          method: "PATCH",
-          body: JSON.stringify(values),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          toast.error(data?.error || "Failed to update book.");
-          return;
-        }
-
-        toast.success("Book updated successfully");
+      } catch (error) {
+        toast.error("Server error please try again later.");
+        console.error(error);
+      } finally {
+        setSubmitimg(false);
       }
-    } catch (error) {
-      toast.error("Server error please try again later.");
-      console.error(error);
-    } finally {
-      setSubmitimg(false);
-    }
-  };
+    },
+    [book, router, type]
+  );
 
   return (
     <>

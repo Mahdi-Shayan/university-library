@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { db } from "@/db/drizzle";
 import { books } from "@/db/schema";
@@ -10,6 +10,7 @@ import BookVideo from "@/components/BookVideo";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
 import { auth } from "../../../../../auth";
+import { unstable_cache } from "next/cache";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -20,20 +21,39 @@ async function BookDetailsPage({ params }: Props) {
 
   const { id } = await params;
 
-  const [book] = (await db
-    .select()
-    .from(books)
-    .where(eq(books.id, id))
-    .limit(1)) as SampleBooks[];
+  const getBookDetails = unstable_cache(
+    async () => {
+      return await db
+        .select()
+        .from(books)
+        .where(eq(books.id, id))
+        .limit(1);
+    },
+    ["book", id],
+    { revalidate: 600, tags: [`book-${id}`] }
+  );
+
+  const [book] = await getBookDetails();
 
   if (!book) redirect("/404");
 
   const { videoUrl, summary, genre } = book;
 
-  const similarBooks = (await db
-    .select()
-    .from(books)
-    .where(eq(books.genre, genre))) as SampleBooks[];
+  const getSimilarBooks = unstable_cache(
+    async () => {
+      return (await db
+        .select()
+        .from(books)
+        .where(eq(books.genre, genre))) as SampleBooks[];
+    },
+    ["similar-books"],
+    {
+      revalidate: 600,
+      tags: ["similar-books"],
+    }
+  );
+
+  const similarBooks = await getSimilarBooks();
 
   return (
     <>

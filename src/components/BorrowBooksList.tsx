@@ -3,6 +3,7 @@ import { books, borrowRecords } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import BorrowedBookPreview from "./BorrowedBookPreview";
 import { BorrowedBook, SampleBooks } from "../../types";
+import { unstable_cache } from "next/cache";
 
 interface Props {
   userId: string;
@@ -14,16 +15,24 @@ interface IBorrowedBook {
 }
 
 async function BorrowBooksList({ userId }: Props) {
-  const borrowBooks = (await db
-    .select()
-    .from(borrowRecords)
-    .where(eq(borrowRecords.userId, userId))
-    .innerJoin(books, eq(borrowRecords.bookId, books.id))
-    .orderBy(
-      eq(borrowRecords.status, "LATE RETURNED"),
-      eq(borrowRecords.status, "RETURNED"),
-      eq(borrowRecords.status, "BORROWED")
-    )) as IBorrowedBook[];
+  const getBorrowBooks = unstable_cache(
+    async () => {
+      return await db
+        .select()
+        .from(borrowRecords)
+        .where(eq(borrowRecords.userId, userId))
+        .innerJoin(books, eq(borrowRecords.bookId, books.id))
+        .orderBy(
+          eq(borrowRecords.status, "LATE RETURNED"),
+          eq(borrowRecords.status, "RETURNED"),
+          eq(borrowRecords.status, "BORROWED")
+        );
+    },
+    ["borrow-books", userId],
+    { revalidate: 600, tags: [`borrow-books-${userId}`] }
+  );
+
+  const borrowBooks = (await getBorrowBooks()) as IBorrowedBook[];
 
   return (
     <div className="h-[90%]">

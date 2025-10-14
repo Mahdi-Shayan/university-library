@@ -626,7 +626,7 @@
   }
 
   .auth-illustration {
-    @apply sticky h-40 w-full md:h-screen md:flex-1 !bg-no-repeat bg-auth bg-cover bg-center;
+    @apply sticky h-40 w-full md:h-screen md:flex-1 !bg-no-repeat bg-dark-100 bg-center;
   }
 
   /* Root */

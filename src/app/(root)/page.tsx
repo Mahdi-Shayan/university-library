@@ -4,14 +4,20 @@ import { db } from "@/db/drizzle";
 import { books } from "@/db/schema";
 import { SampleBooks } from "../../../types";
 import { auth } from "../../../auth";
+import { unstable_cache } from "next/cache";
 
-export const revalidate = 600; // 10 min
+export const revalidate = 600;
 
 async function Home() {
-  const latestBooks = (await db
-    .select()
-    .from(books)
-    .limit(10)) as SampleBooks[];
+  const getLatestBook = unstable_cache(
+    async () => {
+      return (await db.select().from(books).limit(10)) as SampleBooks[];
+    },
+    ["books"],
+    { revalidate: 600, tags: ["books"] }
+  );
+
+  const latestBooks = await getLatestBook();
 
   const session = await auth();
 

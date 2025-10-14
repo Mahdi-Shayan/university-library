@@ -1,20 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { borrowBookAction } from "@/lib/actions/borrowBookAction";
-import {
-  BorrowedBook,
-  SampleBooks,
-  UserParams,
-} from "../../types";
+import { BorrowedBook, SampleBooks, UserParams } from "../../types";
 import { toast } from "sonner";
 import { useBorrowedBooks } from "@/hooks/useBorrowedBooks";
 import { useBooks } from "@/hooks/useBooks";
+import { clientRevalidateTag } from "@/lib/actions/clientRevalidateTags";
 
 interface Props {
-  setUpdated: (value: boolean) => void;
   user: UserParams;
   bookId: string;
 }
@@ -24,7 +20,7 @@ interface BorrowedData {
   borrow_records: BorrowedBook;
 }
 
-function BorrowBookButton({ user, bookId, setUpdated }: Props) {
+function BorrowBookButton({ user, bookId }: Props) {
   const [borrowing, setBorrowing] = useState(false);
   const { id: userId, status } = user;
 
@@ -64,7 +60,7 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
     return { isEligible, message };
   }, [book, status, borrow.length, existingRecord.length]);
 
-  const handleBorrow = async () => {
+  const handleBorrow = useCallback(async () => {
     const { isEligible, message } = borrowingEligibility;
 
     if (!isEligible) {
@@ -74,7 +70,6 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
 
     try {
       setBorrowing(true);
-      setUpdated(false);
 
       const result = await borrowBookAction({ userId, bookId });
 
@@ -86,6 +81,9 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
         return;
       }
 
+      await clientRevalidateTag(`book-${bookId}`);
+      await clientRevalidateTag(`borrow-books-${user.id}`);
+
       toast.success("Book borrow successfully");
       borrowedReftch();
       bookReftch();
@@ -93,9 +91,15 @@ function BorrowBookButton({ user, bookId, setUpdated }: Props) {
       toast.error("An error occurred while borrowing the book");
     } finally {
       setTimeout(() => setBorrowing(false), 1000);
-      setUpdated(true);
     }
-  };
+  }, [
+    userId,
+    bookId,
+    bookReftch,
+    borrowedReftch,
+    borrowingEligibility,
+    user,
+  ]);
 
   return (
     <Button

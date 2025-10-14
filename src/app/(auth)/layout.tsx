@@ -23,14 +23,23 @@ async function Layout({ children }: { children: ReactNode }) {
                 priority={true}
                 className="max-md:size-7"
               />
-              <h1 className="md:text-2xl text-xl font-semibold">BookWise</h1>
+              <h1 className="md:text-2xl text-xl font-semibold">
+                BookWise
+              </h1>
             </div>
             <div>{children}</div>
           </div>
         </section>
-        <section
-          className="auth-illustration"
-        />
+        <section className="auth-illustration">
+          <Image
+            src="/images/auth-illustration.webp"
+            alt=""
+            fill
+            className="object-cover"
+            priority={true}
+            quality={60}
+          />
+        </section>
       </main>
     </EmailContextProvider>
   );
