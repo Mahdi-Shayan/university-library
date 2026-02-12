@@ -89,9 +89,8 @@ function ResetPasswordForm({ onSubmit }: Props) {
       } else {
         toast.error(res.error ?? "An error occurred.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Server Error", { description: "Try again later." });
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -110,9 +109,8 @@ function ResetPasswordForm({ onSubmit }: Props) {
         setIsCodeValid(false);
         return;
       }
-    } catch (error) {
+    } catch {
       toast.error("Server Error", { description: "Try again later." });
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -144,9 +142,8 @@ function ResetPasswordForm({ onSubmit }: Props) {
       } else {
         toast.error(result.error ?? "An error occurred.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Server Error", { description: "Try again later." });
-      console.error(error);
     } finally {
       setIsLoading(false);
     }

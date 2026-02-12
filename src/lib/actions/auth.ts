@@ -32,8 +32,7 @@ export async function signInWithCredentials(
     }
 
     return { success: true };
-  } catch (error) {
-    console.log(error, "Sign in error");
+  } catch {
     return { success: false, error: "password or email is not valid" };
   }
 }

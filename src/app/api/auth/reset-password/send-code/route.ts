@@ -1,11 +1,11 @@
 import { db } from "@/db/drizzle";
 import { verificationCode, users } from "@/db/schema";
-import config from "@/lib/config";
-import ratelimit from "@/lib/rateLimit";
+// import config from "@/lib/config";
+// import ratelimit from "@/lib/rateLimit";
 import { sendEmail } from "@/lib/resetCodeEmail";
 import { randomInt } from "crypto";
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
+// import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -33,13 +33,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const ip =
-      (await headers()).get("x-forwarded-for") || "217.218.48.228";
-    const { success } = await ratelimit.limit(ip);
+    // const ip =
+    //   (await headers()).get("x-forwarded-for") || "217.218.48.228";
+    // const { success } = await ratelimit.limit(ip);
 
-    if (!success) {
-      return NextResponse.redirect(`${config.env.apiEndpoint}/too-fast`);
-    }
+    // if (!success) {
+    //   return NextResponse.redirect(`${config.env.apiEndpoint}/too-fast`);
+    // }
 
     // If the code is not being resent, create a new one
     await db

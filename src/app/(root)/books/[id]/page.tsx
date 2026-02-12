@@ -1,16 +1,13 @@
 export const dynamic = "force-dynamic";
 
-import { db } from "@/db/drizzle";
-import { books } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { SampleBooks } from "../../../../../types";
 import BookReview from "@/components/BookReview";
 import { redirect } from "next/navigation";
 import BookVideo from "@/components/BookVideo";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
 import { auth } from "../../../../../auth";
-import { unstable_cache } from "next/cache";
+import { getSimilarBooks } from "@/lib/actions/getSimilarBooks";
+import { getBookById } from "@/lib/actions/getBookById";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -21,44 +18,18 @@ async function BookDetailsPage({ params }: Props) {
 
   const { id } = await params;
 
-  const getBookDetails = unstable_cache(
-    async () => {
-      return await db
-        .select()
-        .from(books)
-        .where(eq(books.id, id))
-        .limit(1);
-    },
-    ["book", id],
-    { revalidate: 600, tags: [`book-${id}`] }
-  );
-
-  const [book] = await getBookDetails();
+  const [book] = await getBookById(id);
 
   if (!book) redirect("/404");
 
   const { videoUrl, summary, genre } = book;
 
-  const getSimilarBooks = unstable_cache(
-    async () => {
-      return (await db
-        .select()
-        .from(books)
-        .where(eq(books.genre, genre))) as SampleBooks[];
-    },
-    ["similar-books"],
-    {
-      revalidate: 600,
-      tags: ["similar-books"],
-    }
-  );
-
-  const similarBooks = await getSimilarBooks();
+  const similarBooks = await getSimilarBooks(genre);
 
   return (
     <>
       <div>
-        <BookReview {...book} userId={session?.user?.id as string} />
+        <BookReview {...book} userId={session?.user?.id as string} latestBook={book}/>
         <div className="book-details">
           {/* BOOK SUMMARY */}
           <div className="flex-[1.2]">

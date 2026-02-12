@@ -1,34 +1,34 @@
 import BookCover from "./BookCover";
 import { SampleBooks, UserParams } from "../../types";
-import { db } from "@/db/drizzle";
-import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import BookDetails from "./BookDetails";
+import { getUser } from "@/lib/actions/getUser";
 
-interface Props extends SampleBooks {
+interface Props {
+  latestBook: SampleBooks | undefined;
   userId: string;
 }
 
-async function BookReview({
-  title,
-  author,
-  genre,
-  rating,
-  totalCopies,
-  availableCopies,
-  description,
-  coverColor,
-  coverUrl,
-  userId,
-  id,
-}: Props) {
-  const [user] = (await db
-    .select()
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1)) as UserParams[];
+async function BookReview({ latestBook, userId }: Props) {
+  const user = await getUser(userId) as UserParams;
 
   if (!user) return null;
+
+  if (!latestBook) {
+    return <p>No Books in Here!</p>
+  }
+
+  const {
+    title,
+    author,
+    genre,
+    rating,
+    totalCopies,
+    availableCopies,
+    description,
+    coverColor,
+    coverUrl,
+    id,
+  } = latestBook;
 
   return (
     <section className="book-overview">

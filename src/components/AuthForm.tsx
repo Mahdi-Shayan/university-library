@@ -126,9 +126,8 @@ function AuthForm<T extends FieldValues>({
       } else {
         toast.error(res.error ?? "An error occurred.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Server Error", { description: "Try again later." });
-      console.error(error);
     } finally {
       setIsloading(false);
     }
@@ -149,9 +148,8 @@ function AuthForm<T extends FieldValues>({
           res.error ? "invalid verification code" : "An error occurred."
         );
       }
-    } catch (error) {
+    } catch {
       toast.error("Server Error", { description: "Try again later." });
-      console.error(error);
     } finally {
       setIsloading(false);
     }

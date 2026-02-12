@@ -1,12 +1,10 @@
 import HomeBookList from "@/components/HomeBookList";
 import SearchBox from "@/components/SearchBox";
-import { db } from "@/db/drizzle";
-import { books } from "@/db/schema";
 import Image from "next/image";
 import { SampleBooks } from "../../../../types";
 import PaginationData from "@/components/PaginationData";
 import ClearSearchQuery from "@/components/ClearSearchQuery";
-import { unstable_cache } from "next/cache";
+import {getBooks} from "@/lib/actions/getBooks"
 
 export const dynamic = "force-dynamic";
 
@@ -16,14 +14,6 @@ interface Props {
 
 async function Library({ searchParams }: Props) {
   const { query, page } = await searchParams;
-
-  const getBooks = unstable_cache(
-    async () => {
-      return await db.select().from(books);
-    },
-    ["books"],
-    { revalidate: 600, tags: ["books"] }
-  );
 
   const allBooks = await getBooks();
 
