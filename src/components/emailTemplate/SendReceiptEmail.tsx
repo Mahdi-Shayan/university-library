@@ -25,18 +25,18 @@ function SendReceiptEmail({
   const [send, setSend] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const requestBody = {
-    status,
-    type,
-    userName,
-    dueDate,
-    borrowDate,
-    email,
-  };
-
   useEffect(() => {
     async function sendEmail() {
       try {
+        const requestBody = {
+          status,
+          type,
+          userName,
+          dueDate,
+          borrowDate,
+          email,
+        };
+
         setLoading(true);
         const res = await fetch("/api/send/email/", {
           method: "POST",
@@ -62,7 +62,7 @@ function SendReceiptEmail({
     }
 
     if (send) sendEmail();
-  }, [send]);
+  }, [send, status, type, userName, dueDate, borrowDate, email]);
 
   return (
     <Button
