@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 function calcCount(
   todayStats: number,
   yesterdayStats: number,
-  className?: string
+  className?: string,
 ) {
   const calc = todayStats - (yesterdayStats || 0);
 
@@ -19,7 +19,7 @@ function calcCount(
       className={cn(
         className,
         "font-normal",
-        calc >= 0 ? "text-green-500" : "text-orange-500"
+        calc >= 0 ? "text-green-500" : "text-orange-500",
       )}
     >
       {calc >= 0 ? (
@@ -42,11 +42,13 @@ async function Admin() {
   const res = await fetch(`${config.env.apiEndpoint}/api/stats`, {
     cache: "no-store",
   });
-  const result = await res.json();
 
   if (!res.ok) {
-    throw new Error(result?.error);
+    const errorText = await res.text();
+    throw new Error(`${errorText}  with status ${res.status}`);
   }
+
+  const result = await res.json();
 
   const { borrowCount, newBooksCount, userSignups } = result.today;
   const yesterday = result.yesterday;

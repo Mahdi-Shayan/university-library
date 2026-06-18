@@ -54,7 +54,7 @@ export async function GET() {
         today: todayStats[0] ?? null,
         yesterday: yesterdayStats[0] ?? null,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Stats API Error:", error);
